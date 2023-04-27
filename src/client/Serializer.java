@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import resources.task.Route;
+import resources.utility.Request;
 
 import java.io.IOException;
 
@@ -26,6 +27,19 @@ public class Serializer {
 
         } catch (IOException e) {
             System.err.println("error while Route serialization:" + e.getMessage());
+        }
+        return res;
+    }
+
+    public String requestSer(Request r) {
+        String res = "";
+        try {
+            res = mapper
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(r);
+
+        } catch (IOException e) {
+            System.err.println("error while Request serialization:" + e.getMessage());
         }
         return res;
     }
