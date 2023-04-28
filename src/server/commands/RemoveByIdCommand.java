@@ -3,9 +3,9 @@
  */
 package server.commands;
 
+import resources.utility.Response;
 import server.CollectionManager;
-import client.input_manager.Input;
-import server.Deserializer;
+import resources.utility.Deserializer;
 
 import java.util.Objects;
 
@@ -28,20 +28,21 @@ public class RemoveByIdCommand extends AbstractCommand implements Command {
      * Deletes the element with inputted id.
      */
     @Override
-    public void execute(String args) {
-        System.out.println("REMOVE BY ID:");
+    public Response execute(String args) {
+        StringBuilder sb = new StringBuilder("REMOVE BY ID:\n");
         Long id = Deserializer.readLong(args);
         int begin = collectionManager.stack().size();
         if (begin != 0) {
             collectionManager.stack().removeIf(el -> Objects.equals(el.getId(), id));
             if (Objects.equals(collectionManager.stack().size(), begin)) {
-                System.err.println("remove_by_id: there is no element with this id: " + id + ".");
-                System.out.println("If you wish to try again, type 'remove_by_id' one more time.\n");
+                System.err.println("remove_by_id: there is no element with this id: " + id + ".\n");
+                sb.append("If you wish to try again, type 'remove_by_id' one more time.\n\n");
             } else {
-                System.out.println("SUCCESS\n");
+                sb.append("SUCCESS\n\n");
             }
         } else {
-            System.err.println("Collection doesn't have any elements\n");
+            sb.append("Collection doesn't have any elements\n\n");
         }
+        return new Response(new String(sb));
     }
 }

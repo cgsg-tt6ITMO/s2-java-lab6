@@ -3,6 +3,7 @@
  */
 package server.commands;
 
+import resources.utility.Response;
 import server.CommandManager;
 
 /**
@@ -16,7 +17,7 @@ public class HelpCommand extends AbstractCommand implements Command {
      * @param cm - CommandManager.
      */
     public HelpCommand(CommandManager cm) {
-        super("help", "prints list of all server.commands and their descriptions;");
+        super("help", "prints list of all commands and their descriptions;");
         this.commandManager = cm;
     }
 
@@ -24,13 +25,15 @@ public class HelpCommand extends AbstractCommand implements Command {
      * Prints all commands and their descriptions.
      */
     @Override
-    public void execute(String args) {
-        System.out.println("COMMANDS AVAILABLE:");
+    public Response execute(String args) {
+        StringBuilder sb = new StringBuilder("COMMANDS AVAILABLE:\n");
+
         for (var key : commandManager.getCommands().keySet()) {
             if (commandManager.getCommands().get(key).toString().endsWith(";")) {
-                System.out.println(commandManager.getCommands().get(key));
+                sb.append(commandManager.getCommands().get(key)).append("\n");
             }
         }
-        System.out.print('\n');
+        sb.append('\n');
+        return new Response(new String(sb));
     }
 }

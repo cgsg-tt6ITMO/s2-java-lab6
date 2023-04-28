@@ -61,7 +61,7 @@ public class JSONManager {
             }
 
         } catch (Exception ex) {
-            System.err.println("default client.input from json file:" + ex.getMessage());
+            System.err.println("default input from json file:" + ex.getMessage());
             ex.printStackTrace();
         }
         return  st;

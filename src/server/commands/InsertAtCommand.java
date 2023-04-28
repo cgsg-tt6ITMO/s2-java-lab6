@@ -3,6 +3,7 @@
  */
 package server.commands;
 
+import resources.utility.Response;
 import server.CollectionManager;
 import server.CommandManager;
 
@@ -30,18 +31,17 @@ public class InsertAtCommand extends AbstractCommand implements Command {
      * Inserts an element into a place of index you client.input.
      */
     @Override
-    public void execute(String args) {
+    public Response execute(String args) {
         Scanner scanner = new Scanner(args);
         String idStr = scanner.nextLine();
         scanner.close();
         long id = Long.parseLong(idStr);
-        String json = "";
+        StringBuilder json = new StringBuilder();
 
         for (int i = idStr.length(); i < args.length(); i++) {
-            json += args.charAt(i);
+            json.append(args.charAt(i));
         }
 
-        System.out.println("INSERT AT:");
         int n = storage.stack().size();
 
         boolean loop = true;
@@ -49,10 +49,10 @@ public class InsertAtCommand extends AbstractCommand implements Command {
             try {
                 if (id > CollectionManager.getLastId()) {
                     CollectionManager.setLastId(id - 1);
-                    cm.getCommands().get("add").execute(json);
+                    cm.getCommands().get("add").execute(json.toString());
                 }
                 else if (id < 1) {
-                    System.err.println("insert_at: Incorrect id: less than 1\n");
+                    System.err.println("insert_at: TODO надо кинуть Response ошибка Incorrect id: less than 1\n");
                     throw new InputMismatchException();
                 } else {
                     boolean exist = false;
@@ -65,7 +65,7 @@ public class InsertAtCommand extends AbstractCommand implements Command {
                             el.setId(el.getId() + 1);
                         }
                     }
-                    cm.getCommands().get("add").execute(json);
+                    cm.getCommands().get("add").execute(json.toString());
                     storage.stack().peek().setId(id);
                 }
                 loop = false;
@@ -75,9 +75,11 @@ public class InsertAtCommand extends AbstractCommand implements Command {
         } while (loop);
 
         if (storage.stack().size() > n) {
-            System.out.println("Inserted successfully.\n");
+            cm.getCommands().get("sort").execute("");
+            return new Response("INSERT AT:\nInserted successfully.\n");
         }
         cm.getCommands().get("sort").execute("");
+        return new Response("INSERT AT:\n");
     }
 }
 

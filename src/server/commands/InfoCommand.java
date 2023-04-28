@@ -3,6 +3,7 @@
  */
 package server.commands;
 
+import resources.utility.Response;
 import server.CollectionManager;
 
 /**
@@ -24,10 +25,10 @@ public class InfoCommand extends AbstractCommand implements Command{
      * Prints to screen all the attributes of the collection.
      */
     @Override
-    public void execute(String args) {
+    public Response execute(String args) {
         var date = collectionManager.getCreationDate();
-        System.out.println("COLLECTION INFO:\n"
+        return new Response(("COLLECTION INFO:\n"
                 + "creation time: " + date.getHour() + ":" + (date.getMinute() > 9 ? date.getMinute() : "0" + date.getMinute())
-                + "\ntype of storage: " + collectionManager.getType() + "\nnumber of elements: " + collectionManager.stack().size() + "\n");
+                + "\ntype of storage: " + collectionManager.getType() + "\nnumber of elements: " + collectionManager.stack().size() + "\n\n"));
     }
 }

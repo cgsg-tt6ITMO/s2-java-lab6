@@ -3,6 +3,7 @@
  */
 package server.commands;
 
+import resources.utility.Response;
 import server.CollectionManager;
 
 /**
@@ -24,15 +25,15 @@ public class ShowCommand extends AbstractCommand implements Command{
      * Prints the collection to screen.
      */
     @Override
-    public void execute(String args) {
-        System.out.println("SHOW COLLECTION:");
+    public Response execute(String args) {
+        StringBuilder sb = new StringBuilder("SHOW COLLECTION:\n");
         if (collectionManager.stack().size() == 0) {
-            System.out.println("The collection is empty.");
-            return;
+            sb.append("The collection is empty.");
+            return new Response(new String(sb));
         }
         for (var el : collectionManager.stack()) {
-            System.out.println("ID: \t\t" + el.getId() + "\nName: \t\t" + el.getName()
-                    + "\nDistance: \t" + el.getDistance() + "\n");
+            sb.append("ID: \t\t").append(el.getId()).append("\nName: \t\t").append(el.getName()).append("\nDistance: \t").append(el.getDistance()).append("\n\n");
         }
+        return new Response(new String(sb));
     }
 }

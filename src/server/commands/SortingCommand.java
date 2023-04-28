@@ -3,6 +3,7 @@
  */
 package server.commands;
 
+import resources.utility.Response;
 import server.CollectionManager;
 import resources.task.Route;
 
@@ -35,7 +36,7 @@ public class SortingCommand implements Command {
      * Sorts the Stack by id.
      */
     @Override
-    public void execute(String args) {
+    public Response execute(String args) {
         for (int j = 0; j < storage.stack().size() - 1; j++) {
             for (int i = j + 1; i < storage.stack().size(); i++) {
                 if (storage.stack().get(i).getId() < storage.stack().get(i - 1).getId()) {
@@ -43,5 +44,6 @@ public class SortingCommand implements Command {
                 }
             }
         }
+        return new Response();
     }
 }

@@ -3,10 +3,10 @@
  */
 package server.commands;
 
+import resources.utility.Response;
 import server.CollectionManager;
-import client.input_manager.Input;
 import resources.task.Route;
-import server.Deserializer;
+import resources.utility.Deserializer;
 
 /**
  * Handle 'add_if_max' method.
@@ -27,8 +27,7 @@ public class AddIfMaxCommand extends AbstractCommand implements Command {
      * Adds the element if it is larger than every element stored in collection.
      */
     @Override
-    public void execute(String args) {
-        System.out.println("ADD IF MAX:");
+    public Response execute(String args) {
         Route route = Deserializer.readRoute(args);
 
         boolean flag = true;
@@ -40,10 +39,9 @@ public class AddIfMaxCommand extends AbstractCommand implements Command {
         }
         if (flag) {
             collectionManager.stack().add(route);
-            System.out.println("NEW ELEMENT ADDED SUCCESSFULLY\n");
+            return new Response("ADD IF MAX:\nNEW ELEMENT ADDED SUCCESSFULLY\n");
         }
-        else {
-            System.out.println("The element is not max, so it was not added.\n");
-        }
+        return new Response("ADD IF MAX:\nThe element is not max, so it was not added.\n");
+
     }
 }

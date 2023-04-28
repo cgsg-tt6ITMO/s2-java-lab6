@@ -3,10 +3,10 @@
  */
 package server.commands;
 
+import resources.utility.Response;
 import server.CollectionManager;
-import client.input_manager.Input;
 import resources.task.Route;
-import server.Deserializer;
+import resources.utility.Deserializer;
 
 /**
  * Handle 'remove_lower' method.
@@ -27,10 +27,10 @@ public class RemoveLowerCommand extends AbstractCommand implements Command {
      * Removes all elements lower than inputted.
      */
     @Override
-    public void execute(String args) {
+    public Response execute(String args) {
         Route route = Deserializer.readRoute(args);
         int n = cm.stack().size();
-        System.out.println("REMOVE LOWER:");
+        StringBuilder sb = new StringBuilder("REMOVE LOWER:\n");
         for (var el : cm.stack()) {
             if (route.compareTo(el) > 0) {
                 cm.stack().remove(el);
@@ -38,9 +38,10 @@ public class RemoveLowerCommand extends AbstractCommand implements Command {
         }
         // analyse results
         if (n > cm.stack().size()) {
-            System.out.println("SUCCESSFUL REMOVE\n");
+            sb.append("SUCCESSFUL REMOVE\n\n");
         } else {
-            System.out.println("No elements were less than inputted.\n");
+            sb.append("No elements were less than inputted.\n\n");
         }
+        return new Response(new String(sb));
     }
 }

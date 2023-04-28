@@ -3,7 +3,7 @@
  */
 package resources.task;
 
-import server.exceptions.NullLocationException;
+import resources.exceptions.NullLocationException;
 import client.input_manager.AskInputManager;
 import server.CollectionManager;
 

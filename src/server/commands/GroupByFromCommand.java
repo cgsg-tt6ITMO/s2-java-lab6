@@ -3,6 +3,7 @@
  */
 package server.commands;
 
+import resources.utility.Response;
 import server.CollectionManager;
 
 import java.util.HashMap;
@@ -26,8 +27,8 @@ public class GroupByFromCommand extends AbstractCommand implements Command {
      * Outputs numbers of elements with the same from.
      */
     @Override
-    public void execute(String args) {
-        System.out.println("GROUP COUNTING BY 'FROM':");
+    public Response execute(String args) {
+        StringBuilder sb = new StringBuilder("GROUP COUNTING BY 'FROM':");
         HashMap<String, Integer> grouped = new HashMap<>();
 
         for (var el : collectionManager.stack()) {
@@ -40,7 +41,8 @@ public class GroupByFromCommand extends AbstractCommand implements Command {
             }
         }
         for (var el : grouped.keySet()) {
-            System.out.println("resourses.Location from: " + el + "\nNumber of elements with this from: " + grouped.get(el));
+            sb.append("Location from: ").append(el).append("\nNumber of elements with this from: ").append(grouped.get(el)).append("\n");
         }
+        return new Response(new String(sb));
     }
 }

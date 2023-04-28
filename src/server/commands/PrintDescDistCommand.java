@@ -3,6 +3,7 @@
  */
 package server.commands;
 
+import resources.utility.Response;
 import server.CollectionManager;
 
 import java.util.ArrayList;
@@ -27,16 +28,17 @@ public class PrintDescDistCommand extends AbstractCommand implements Command {
      * Prints distances in descending order.
      */
     @Override
-    public void execute(String args) {
-        System.out.println("ALL DISTANCES IN DESCENDING ORDER:");
+    public Response execute(String args) {
+        StringBuilder sb = new StringBuilder("ALL DISTANCES IN DESCENDING ORDER:");
         ArrayList<Double> distances = new ArrayList<>();
         for (var el : collectionManager.stack()) {
             distances.add(el.getDistance());
         }
         distances.sort(Comparator.comparing(el -> el));
         for (int i = distances.size() - 1; i >= 0; i--) {
-            System.out.println(distances.get(i));
+            sb.append(distances.get(i)).append("\n");
         }
-        System.out.print('\n');
+        sb.append('\n');
+        return new Response(new String(sb));
     }
 }

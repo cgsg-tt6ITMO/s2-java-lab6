@@ -4,9 +4,9 @@
 package server.commands;
 
 import resources.task.Route;
+import resources.utility.Response;
 import server.CollectionManager;
-import client.input_manager.Input;
-import server.Deserializer;
+import resources.utility.Deserializer;
 
 /**
  * Handle 'add' method.
@@ -27,10 +27,9 @@ public class AddCommand extends AbstractCommand implements Command {
      * Adds one element from console to the collection.
      */
     @Override
-    public void execute(String args) {
+    public Response execute(String args) {
         Route r = Deserializer.readRoute(args);
-        System.out.println("ADD ELEMENT:");
         collectionManager.stack().add(r);
-        System.out.println("NEW ELEMENT ADDED SUCCESSFULLY\n");
+        return new Response("ADD ELEMENT:\nNEW ELEMENT ADDED SUCCESSFULLY\n");
     }
 }

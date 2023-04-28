@@ -3,6 +3,8 @@
  */
 package server.commands;
 
+import resources.utility.Response;
+
 import static java.lang.System.exit;
 
 /**
@@ -20,8 +22,8 @@ public class ExitCommand extends AbstractCommand implements Command {
      * Aborts the program.
      */
     @Override
-    public void execute(String args) {
+    public Response execute(String args) {
         exit(0);
-        System.out.println("EXIT...\n");
+        return new Response("EXIT...\n");
     }
 }

@@ -3,6 +3,7 @@
  */
 package server.commands;
 
+import resources.utility.Response;
 import server.CollectionManager;
 import resources.utility.JSONManager;
 
@@ -29,8 +30,8 @@ public class SaveCommand extends AbstractCommand implements Command {
      * Save collection to json file.
      */
     @Override
-    public void execute(String args) {
+    public Response execute(String args) {
         jsonManager.write(collectionManager.stack(), path);
-        System.out.println("SAVED TO JSON SUCCESSFULLY");
+        return new Response("SAVED TO JSON SUCCESSFULLY\n");
     }
 }

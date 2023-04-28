@@ -1,7 +1,7 @@
 /**
  * @author Troitskaya Tamara (cgsg-tt6)
  */
-package server.exceptions;
+package resources.exceptions;
 
 /**
  * Null-resourses.Location set in Route.

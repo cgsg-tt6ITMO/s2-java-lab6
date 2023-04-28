@@ -29,7 +29,7 @@ public class Coordinates {
     }
 
     /**
-     * Sets X, without any server.exceptions written by me.
+     * Sets X, without any resources.exceptions written by me.
      */
     public void setX(Double x) {
         if (x != null) {

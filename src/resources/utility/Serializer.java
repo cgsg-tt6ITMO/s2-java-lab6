@@ -1,15 +1,14 @@
-package client;
+package resources.utility;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import resources.task.Route;
-import resources.utility.Request;
 
 import java.io.IOException;
 
 public class Serializer {
-    private final ObjectMapper mapper = new ObjectMapper()
+    private static final ObjectMapper mapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
@@ -18,7 +17,7 @@ public class Serializer {
      */
     public Serializer() {}
 
-    public String routeSer(Route r) {
+    public static String routeSer(Route r) {
         String res = "";
         try {
             res = mapper
@@ -31,7 +30,7 @@ public class Serializer {
         return res;
     }
 
-    public String requestSer(Request r) {
+    public static String requestSer(Request r) {
         String res = "";
         try {
             res = mapper
@@ -44,15 +43,28 @@ public class Serializer {
         return res;
     }
 
-    public String longSer(Long l) {
+    public static String responseSer(Response r) {
+        String res = "";
+        try {
+            res = mapper
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(r);
+
+        } catch (IOException e) {
+            System.err.println("error while Response serialization:" + e.getMessage());
+        }
+        return res;
+    }
+
+    public static String longSer(Long l) {
         return String.valueOf(l);
     }
 
-    public String longRouteSer(long n, Route r) {
+    public static String longRouteSer(long n, Route r) {
         return longSer(n) + "\n" + routeSer(r);
     }
 
-    public String doubleSer(Double d) {
+    public static String doubleSer(Double d) {
         return String.valueOf(d);
     }
 }

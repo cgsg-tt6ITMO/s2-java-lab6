@@ -3,6 +3,8 @@
  */
 package server.commands;
 
+import resources.utility.Response;
+
 /**
  * Interface of all server.commands.
  */
@@ -10,5 +12,5 @@ public interface Command {
     /**
      * Run the command.
      */
-    void execute(String args);
+    Response execute(String args);
 }

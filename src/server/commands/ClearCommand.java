@@ -3,6 +3,7 @@
  */
 package server.commands;
 
+import resources.utility.Response;
 import server.CollectionManager;
 
 /**
@@ -24,8 +25,8 @@ public class ClearCommand extends AbstractCommand implements Command{
      * Deletes all the elements in collection.
      */
     @Override
-    public void execute(String args) {
+    public Response execute(String args) {
         collectionManager.stack().clear();
-        System.out.println("CLEAR:\nNow the collection is empty.\n");
+        return new Response("CLEAR:\nNow the collection is empty.\n");
     }
 }

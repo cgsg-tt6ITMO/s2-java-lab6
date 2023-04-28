@@ -1,7 +1,7 @@
 /**
  * @author Troitskaya Tamara (cgsg-tt6)
  */
-package server.exceptions;
+package resources.exceptions;
 
 /**
  * Infinite loop in 'execute_script'.

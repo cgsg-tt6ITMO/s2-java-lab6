@@ -33,11 +33,12 @@ public class CommandManager {
         RemoveLowerCommand removeLower = new RemoveLowerCommand(collectionManager);
         InsertAtCommand insertAt = new InsertAtCommand(collectionManager, this);
         UpdateCommand update = new UpdateCommand(collectionManager);
-        SaveCommand save = new SaveCommand("files/out.json", collectionManager);
+        //SaveCommand save = new SaveCommand("files/out.json", collectionManager);
         ExecuteScriptCommand executeScript = new ExecuteScriptCommand(collectionManager, inputManager);
         SortingCommand sort = new SortingCommand(collectionManager);
 
         commands.put(help.getName(), help);
+
         commands.put(info.getName(), info);
         commands.put(show.getName(), show);
         commands.put(clear.getName(), clear);
@@ -51,9 +52,10 @@ public class CommandManager {
         commands.put(removeLower.getName(), removeLower);
         commands.put(insertAt.getName(), insertAt);
         commands.put(update.getName(), update);
-        commands.put(save.getName(), save);
+        //commands.put(save.getName(), save);
         commands.put(executeScript.getName(), executeScript);
         commands.put("sort", sort);
+
     }
 
     /**

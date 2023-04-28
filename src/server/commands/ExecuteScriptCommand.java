@@ -5,8 +5,9 @@ package server.commands;
 
 import client.input_manager.Input;
 import client.input_manager.InputManager;
+import resources.utility.Response;
 import server.CollectionManager;
-import server.exceptions.InfiniteLoopException;
+import resources.exceptions.InfiniteLoopException;
 import server.CommandManager;
 
 import java.io.*;
@@ -33,7 +34,7 @@ public class ExecuteScriptCommand extends AbstractCommand implements Command {
      * Input elements from file.
      */
     @Override
-    public void execute(String args) {
+    public Response execute(String args) {
         boolean loop = true, wasErr = false;
         do {
             try {
@@ -76,6 +77,7 @@ public class ExecuteScriptCommand extends AbstractCommand implements Command {
                 loop = false;
             }
         } while (loop);
+        return new Response("IT'S EXECUTE SCRIPT,\nMOTHERFUCKER!\n");
     }
 }
 

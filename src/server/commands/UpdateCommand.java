@@ -4,11 +4,11 @@
 package server.commands;
 
 import resources.task.Route;
+import resources.utility.Response;
 import server.CollectionManager;
-import client.input_manager.Input;
 import resources.task.Coordinates;
 import resources.task.Location;
-import server.Deserializer;
+import resources.utility.Deserializer;
 
 import java.util.Scanner;
 
@@ -32,32 +32,29 @@ public class UpdateCommand extends AbstractCommand implements Command {
     /**
      * @param id index of element to be shown.
      */
-    private void show_by_id(Long id) {
+    private StringBuilder show_by_id(Long id) {
+        StringBuilder s = new StringBuilder();
         for (var r : storage.stack()) {
             if (r.getId().equals(id)) {
-                System.out.println("Route Id:      " + r.getId() + "\nName:          " + r.getName()
-                        + "\nCreation date: " + r.getCreationTime()
-                        + "\nCoordinates:   " + r.getCoordinates().getX() + " " + r.getCoordinates().getY()
-                        + "\nresourses.Location From: " + r.getFrom().getName() + " " + r.getFrom().getX() + " " + r.getFrom().getY() + " " + r.getFrom().getZ()
-                        + "\nresourses.Location To:   " + r.getTo().getName() + " " + r.getTo().getX() + " " + r.getTo().getY() + " " + r.getTo().getZ()
-                        + "\nDistance:      " + r.getDistance() + "\n");
+                s.append("Route Id:      ").append(r.getId()).append("\nName:          ").append(r.getName()).append("\nCreation date: ").append(r.getCreationTime()).append("\nCoordinates:   ").append(r.getCoordinates().getX()).append(" ").append(r.getCoordinates().getY()).append("\nLocation From: ").append(r.getFrom().getName()).append(" ").append(r.getFrom().getX()).append(" ").append(r.getFrom().getY()).append(" ").append(r.getFrom().getZ()).append("\nLocation To:   ").append(r.getTo().getName()).append(" ").append(r.getTo().getX()).append(" ").append(r.getTo().getY()).append(" ").append(r.getTo().getZ()).append("\nDistance:      ").append(r.getDistance()).append("\n\n");
             }
         }
+        return s;
     }
 
     /**
      * Updates element with id inputted.
      */
     @Override
-    public void execute(String args) {
+    public Response execute(String args) {
         Scanner scanner = new Scanner(args);
         String idStr = scanner.nextLine();
         scanner.close();
         Long id = Long.parseLong(idStr);
-        String json = "";
+        StringBuilder json = new StringBuilder();
 
         for (int i = idStr.length(); i < args.length(); i++) {
-            json += args.charAt(i);
+            json.append(args.charAt(i));
         }
 
         boolean exist = false;
@@ -69,13 +66,12 @@ public class UpdateCommand extends AbstractCommand implements Command {
             }
         }
         if (!exist) {
-            System.out.println("Element with this id doesn't exist.");
-            return;
+            return new Response("Element with this id doesn't exist.");
         }
 
-        show_by_id(id);
+        StringBuilder sb = new StringBuilder(show_by_id(id));
 
-        Route route = Deserializer.readRoute(json);
+        Route route = Deserializer.readRoute(json.toString());
 
         String Name = route.getName();
         Coordinates coords = route.getCoordinates();
@@ -93,6 +89,7 @@ public class UpdateCommand extends AbstractCommand implements Command {
                 break;
             }
         }
-        System.out.println("ELEMENT UPDATED SUCCESSFULLY\n");
+        sb.append("ELEMENT UPDATED SUCCESSFULLY\n\n");
+        return new Response(new String(sb));
     }
 }

@@ -3,8 +3,9 @@
  */
 package server.commands;
 
+import resources.utility.Response;
 import server.CollectionManager;
-import server.Deserializer;
+import resources.utility.Deserializer;
 
 /**
  * Handle 'filter_greater_than_distance' method.
@@ -25,15 +26,15 @@ public class FilterGreaterDistCommand extends AbstractCommand implements Command
      * Shows elements with distance greater than the inputted one.
      */
     @Override
-    public void execute(String args) {
-        System.out.println("ROUTES WITH DIST GREATER THAN INPUTTED:\n");
+    public Response execute(String args) {
+        StringBuilder sb = new StringBuilder("ROUTES WITH DIST GREATER THAN INPUTTED:\n");
         Double distance = Deserializer.readDouble(args);
         for (var el : collectionManager.stack()) {
             if (el.getDistance() > distance) {
-                System.out.println("ID: \t\t" + el.getId() + "\nName: \t\t" + el.getName()
-                        + "\nDistance: \t" + el.getDistance() + "\n");
+                sb.append("ID: \t\t").append(el.getId()).append("\nName: \t\t").append(el.getName()).append("\nDistance: \t").append(el.getDistance()).append("\n\n");
             }
         }
-        System.out.print('\n');
+        sb.append('\n');
+        return new Response(new String(sb));
     }
 }
