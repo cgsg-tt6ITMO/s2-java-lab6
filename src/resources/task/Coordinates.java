@@ -29,7 +29,7 @@ public class Coordinates {
     }
 
     /**
-     * Sets X, without any resources.exceptions written by me.
+     * Sets X, without any exceptions written by me.
      */
     public void setX(Double x) {
         if (x != null) {
@@ -42,9 +42,9 @@ public class Coordinates {
                     System.err.println("Coordinate: You are trying to make X equal null");
                     System.out.println("Input X again:");
                     setX(new Scanner(System.in).nextDouble());
-                    loop = true;
-                } catch (NumberFormatException | InputMismatchException e) {
                     loop = false;
+                } catch (NumberFormatException | InputMismatchException e) {
+                    loop = true;
                 }
             } while (loop);
         }

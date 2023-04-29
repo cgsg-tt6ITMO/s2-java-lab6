@@ -3,6 +3,7 @@
  */
 package resources.task;
 
+import client.validators.DistanceValidator;
 import resources.exceptions.NullLocationException;
 import client.input_manager.AskInputManager;
 import server.CollectionManager;
@@ -220,23 +221,17 @@ public class Route implements Comparable<Route>{
      * @param distance - the length (long)
      */
     public void setDistance(Double distance) {
-        try {
-            if (distance > 1) {
-                this.distance = distance;
-            } else {
-                System.err.println("Class Route: distance is less than 1 (or equals 1)");
-                throw new InputMismatchException();
-            }
-        }
-        catch (NumberFormatException | InputMismatchException e) {
+        if (new DistanceValidator().validate(distance)) {
+            this.distance = distance;
+        } else {
             boolean loop = true;
             do {
                 try {
-                    System.err.println("setDistance: incorrect client.input");
+                    System.err.println("Class Route: distance");
                     System.out.println("Input correct data:");
                     setDistance(Double.parseDouble(new Scanner(System.in).next()));
                     loop = false;
-                } catch (NumberFormatException | InputMismatchException exception) {
+                } catch (NumberFormatException | InputMismatchException e) {
                     loop = true;
                 }
             } while (loop);

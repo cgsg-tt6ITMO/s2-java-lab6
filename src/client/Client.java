@@ -8,12 +8,10 @@ import resources.utility.Deserializer;
 import resources.utility.Request;
 import client.input_manager.AskInputManager;
 import client.input_manager.Input;
+import resources.utility.Response;
 import resources.utility.Serializer;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -38,16 +36,15 @@ public class Client {
 
         String command = sc.nextLine();
         switch (command) {
-            // save должно совершаться на сервере
             case "group_counting_by_from",
                     "help", "info", "show",
                     "print_field_descending_distance",
                     "clear", "exit" -> {
-                r = (new Request(command, null));
+                r = (new Request(command, ""));
             }
             case "add", "remove_lower", "add_if_max" -> {
                 // нужно чекнуть, что правильный сканнер для execute_script
-                r = (new Request(command, Serializer.routeSer(im.inpRoute())));
+                r = (new Request(command, Serializer.objSer(im.inpRoute())));
             }
             case "remove_by_id" ->
                     r = (new Request(command, Serializer.longSer(im.inpLong("id"))));
@@ -63,29 +60,24 @@ public class Client {
             }
         }
         if (r != null) {
-            arr = Serializer.requestSer(r).getBytes(StandardCharsets.UTF_8);
-            len = arr.length;
+            arr = Serializer.objSer(r).getBytes(StandardCharsets.UTF_8);
         }
         else {
-            arr = new byte[1000];
-            len = arr.length;
+            arr = new byte[8192];
             System.err.println("arr is null");
         }
+        len = arr.length;
     }
 
     public static void main(String[] args) {
         InetAddress host;
         int port = 6000;
         SocketAddress addr;
-        SocketChannel sock;
-        // буффер массива, который мы передаём на сервер
-        ByteBuffer buf; // = ByteBuffer.allocate(8192);
+        ByteBuffer buf;
 
-        try {
+        try (SocketChannel sock = SocketChannel.open()) {
             host = InetAddress.getLocalHost();
             addr = new InetSocketAddress(host, port);
-            // он хочет try с ресурсами для автозакрытия
-            sock = SocketChannel.open();
             sock.connect(addr);
             while (sc.hasNext()) {
                 run();
@@ -99,17 +91,10 @@ public class Client {
                 sock.read(buf);
 
                 // выводим данные response
-                String s =Deserializer.readResp(new String(buf.array()).trim()).getMessage();
-                System.out.println(s);
+                Response response = Deserializer.readResp(new String(buf.array()).trim());
+                System.out.println(response.getMessage());
                 buf.clear();
-                /*
-                for (int i = 0; i < len; i++) {
-                    System.out.println(arr[i]);
-                }
-
-                 */
             }
-            sock.close();
         } catch (UnknownHostException e) {
             System.err.println(e.getMessage());
         } catch (ConnectException e) {

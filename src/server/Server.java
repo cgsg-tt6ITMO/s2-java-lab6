@@ -35,13 +35,9 @@ public class Server {
         int port = 6000;
         SocketAddress addr;
         SocketChannel sock;
-        // фабрика сокетов
         ServerSocketChannel serv;
-        // буффер массива, который мы передаём на сервер
         ByteBuffer buf;
-        // RequestHandler rh = new RequestHandler();
 
-        // для работы с коллекцией
         String envVar = "JAVA_LABA_6";
         CollectionManager storage = new CollectionManager(System.getenv().get(envVar));
         Scanner scanner = new Scanner(System.in).useLocale(Locale.US);
@@ -60,17 +56,14 @@ public class Server {
                 buf = ByteBuffer.wrap(arr);
                 sock.read(buf);
 
-                String req = new String(arr);
                 // прогнать через десер, десер прогнать через req handler
                 // зачем req handler, если мы в итоге req -> serial -> req -> req handler
 
-                Request r = (Deserializer.readReq(req));
+                Request r = Deserializer.readReq(new String(arr));
                 Response response = commandManager.getCommands().get(r.name()).execute(r.args());
 
-                // надо response обернуть и отправить обратно
-                arr = Serializer.responseSer(response).getBytes(StandardCharsets.UTF_8);
-
-                //System.out.println(new String(arr));
+                // обратно
+                arr = Serializer.objSer(response).getBytes(StandardCharsets.UTF_8);
                 buf = ByteBuffer.wrap(arr);
 
                 // передаём обратно на клиент

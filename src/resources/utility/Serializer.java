@@ -17,7 +17,7 @@ public class Serializer {
      */
     public Serializer() {}
 
-    public static String routeSer(Route r) {
+    public static String objSer(Object r) {
         String res = "";
         try {
             res = mapper
@@ -25,33 +25,7 @@ public class Serializer {
                     .writeValueAsString(r);
 
         } catch (IOException e) {
-            System.err.println("error while Route serialization:" + e.getMessage());
-        }
-        return res;
-    }
-
-    public static String requestSer(Request r) {
-        String res = "";
-        try {
-            res = mapper
-                    .writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(r);
-
-        } catch (IOException e) {
-            System.err.println("error while Request serialization:" + e.getMessage());
-        }
-        return res;
-    }
-
-    public static String responseSer(Response r) {
-        String res = "";
-        try {
-            res = mapper
-                    .writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(r);
-
-        } catch (IOException e) {
-            System.err.println("error while Response serialization:" + e.getMessage());
+            System.err.println("error while " + r.getClass() + " serialization:" + e.getMessage());
         }
         return res;
     }
@@ -61,7 +35,7 @@ public class Serializer {
     }
 
     public static String longRouteSer(long n, Route r) {
-        return longSer(n) + "\n" + routeSer(r);
+        return longSer(n) + "\n" + objSer(r);
     }
 
     public static String doubleSer(Double d) {
