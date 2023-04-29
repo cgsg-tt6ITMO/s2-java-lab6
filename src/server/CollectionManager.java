@@ -4,7 +4,6 @@
 package server;
 
 import resources.task.Route;
-import resources.utility.JSONManager;
 
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -86,11 +85,10 @@ public class CollectionManager {
 
     /**
      * Collection initialization.
-     * @param file file with default collection.
      */
-    public CollectionManager(String file) {
+    public CollectionManager(Loader loader) {
         type = "Stack";
         creationDate = ZonedDateTime.now();
-        stack = new JSONManager().read(file);
+        stack = loader.load();
     }
 }

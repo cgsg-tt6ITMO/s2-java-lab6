@@ -38,11 +38,7 @@ public class Server {
         ServerSocketChannel serv;
         ByteBuffer buf;
 
-        String envVar = "JAVA_LABA_6";
-        CollectionManager storage = new CollectionManager(System.getenv().get(envVar));
-        Scanner scanner = new Scanner(System.in).useLocale(Locale.US);
-        AskInputManager askInputManager = new AskInputManager(scanner);
-        CommandManager commandManager = new CommandManager(storage, askInputManager);
+        CommandManager commandManager = new CommandManager();
 
         try {
             host = InetAddress.getLocalHost();

@@ -3,7 +3,6 @@
  */
 package server;
 
-import client.input_manager.Input;
 import server.commands.*;
 
 import java.util.HashMap;
@@ -17,15 +16,19 @@ public class CommandManager {
     /**
      * Adds instances of all commands to list.
      */
-    public CommandManager(CollectionManager collectionManager, Input inputManager) {
+    public CommandManager() {
         String envVar = "JAVA_LABA_6";
+        Loader loader = new Loader(System.getenv().get(envVar));
+        CollectionManager collectionManager = new CollectionManager(loader);
+        Saver saver = new Saver(collectionManager.stack(), System.getenv().get(envVar));
+        SortingCommand sort = new SortingCommand(collectionManager);
 
         HelpCommand help = new HelpCommand(this);
         InfoCommand info = new InfoCommand(collectionManager);
         ShowCommand show = new ShowCommand(collectionManager);
         ClearCommand clear = new ClearCommand(collectionManager);
         AddCommand add = new AddCommand(collectionManager);
-        ExitCommand exit = new ExitCommand(this);
+        ExitCommand exit = new ExitCommand(saver);
         PrintDescDistCommand descDist = new PrintDescDistCommand(collectionManager);
         FilterGreaterDistCommand filterGreaterDist = new FilterGreaterDistCommand(collectionManager);
         AddIfMaxCommand addIfMax = new AddIfMaxCommand(collectionManager);
@@ -34,10 +37,7 @@ public class CommandManager {
         RemoveLowerCommand removeLower = new RemoveLowerCommand(collectionManager);
         InsertAtCommand insertAt = new InsertAtCommand(collectionManager, this);
         UpdateCommand update = new UpdateCommand(collectionManager);
-        ExecuteScriptCommand executeScript = new ExecuteScriptCommand(collectionManager, inputManager);
-
-        SaveCommand save = new SaveCommand(System.getenv().get(envVar), collectionManager);
-        SortingCommand sort = new SortingCommand(collectionManager);
+        //ExecuteScriptCommand executeScript = new ExecuteScriptCommand(collectionManager, inputManager);
 
         commands.put(help.getName(), help);
         commands.put(info.getName(), info);
@@ -53,9 +53,8 @@ public class CommandManager {
         commands.put(removeLower.getName(), removeLower);
         commands.put(insertAt.getName(), insertAt);
         commands.put(update.getName(), update);
-        commands.put(executeScript.getName(), executeScript);
+        //commands.put(executeScript.getName(), executeScript);
 
-        commands.put(save.getName(), save);
         commands.put("sort", sort);
 
     }

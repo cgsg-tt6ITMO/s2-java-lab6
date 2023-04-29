@@ -5,6 +5,7 @@ package server.commands;
 
 import resources.utility.Response;
 import server.CommandManager;
+import server.Saver;
 
 import static java.lang.System.exit;
 
@@ -12,14 +13,14 @@ import static java.lang.System.exit;
  * Handle 'exit' command.
  */
 public class ExitCommand extends AbstractCommand implements Command {
-    private final CommandManager commandManager;
+    private final Saver saver;
 
     /**
      * Sets name and description of the command.
      */
-    public ExitCommand(CommandManager cm) {
+    public ExitCommand(Saver saver) {
         super("exit", "interrupts the program without saving;");
-        this.commandManager = cm;
+        this.saver = saver;
     }
 
     /**
@@ -27,7 +28,7 @@ public class ExitCommand extends AbstractCommand implements Command {
      */
     @Override
     public Response execute(String args) {
-        commandManager.getCommands().get("save").execute("");
+        saver.save();
         exit(0);
         return new Response("EXIT...\n");
     }
