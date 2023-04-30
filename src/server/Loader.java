@@ -6,8 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import resources.task.Route;
 
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 import java.util.Stack;
 
 /**
@@ -30,12 +29,8 @@ public class Loader {
     public Stack<Route> load() {
         Stack<Route> st = new Stack<>();
         try {
-            List<Route> books = Arrays.asList(mapper.readValue(Paths.get(path).toFile(), Route[].class));
-
-            for (Route route : books) {
-                st.add(route);
-            }
-
+            Route[] books = mapper.readValue(Paths.get(path).toFile(), Route[].class);
+            Collections.addAll(st, books);
         } catch (Exception ex) {
             System.err.println("default input from json file:" + ex.getMessage());
             ex.printStackTrace();

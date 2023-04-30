@@ -21,6 +21,17 @@ public class Deserializer {
         return res;
     }
 
+    public static Request[] readArr(String json) {
+        Request[] res = null;
+        try {
+            res = mapper.readValue(json, Request[].class);
+        } catch (Exception ex) {
+            System.err.println("Arr input from json:" + ex.getMessage());
+            ex.printStackTrace();
+        }
+        return res;
+    }
+
     public static Request readReq(String json) {
         Request res = null;
         try {

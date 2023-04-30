@@ -28,13 +28,9 @@ print_field_descending_distance
 filter_greater_than_distance
 53
 remove_by_id
--1
-show
-remove_by_id
 1
 show
 insert_at
--3
 1
 mimi
 0.1
@@ -59,6 +55,5 @@ jgh
 434
 7
 ghjghj
-save
 info
 show

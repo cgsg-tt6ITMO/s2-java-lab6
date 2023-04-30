@@ -55,8 +55,7 @@ public class ExecuteScriptCommand extends AbstractCommand implements Command {
 
                 File file = new File(path);
                 Scanner fileScanner = new Scanner(file);
-                InputManager im = new InputManager(fileScanner);
-                CommandManager commandManager = new CommandManager(collectionManager, im);
+                CommandManager commandManager = new CommandManager();
 
                 while (fileScanner.hasNext()) {
                     String command = fileScanner.nextLine();

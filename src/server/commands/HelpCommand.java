@@ -29,7 +29,7 @@ public class HelpCommand extends AbstractCommand implements Command {
         StringBuilder sb = new StringBuilder("COMMANDS AVAILABLE:\n");
 
         for (var key : commandManager.getCommands().keySet()) {
-            if (commandManager.getCommands().get(key).toString().endsWith(";")) {
+            if (commandManager.getCommands().get(key) instanceof AbstractCommand) {
                 sb.append(commandManager.getCommands().get(key)).append("\n");
             }
         }

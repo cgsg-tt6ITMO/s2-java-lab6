@@ -15,6 +15,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -55,11 +56,33 @@ public class Server {
                 // прогнать через десер, десер прогнать через req handler
                 // зачем req handler, если мы в итоге req -> serial -> req -> req handler
 
+                if (arr[0] == '[') {
+                    System.out.println("array form execute_script");
+                    Request[] reqs = Deserializer.readArr(new String(arr));
+                    ArrayList<Response> response = new ArrayList<>();
+                    for (Request r : reqs) {
+                        //System.out.println(r);
+                        if (r != null) {
+                            Response res = commandManager.getCommands().get(r.name()).execute(r.args());
+                            response.add(res);
+                        }
+                    }
+                    arr = Serializer.objSer(response).getBytes(StandardCharsets.UTF_8);
+                    System.out.println(new String(arr));
+                } else {
+                    Request r = Deserializer.readReq(new String(arr));
+                    Response response = commandManager.getCommands().get(r.name()).execute(r.args());
+                    arr = Serializer.objSer(response).getBytes(StandardCharsets.UTF_8);
+                }
+/*
                 Request r = Deserializer.readReq(new String(arr));
                 Response response = commandManager.getCommands().get(r.name()).execute(r.args());
 
+ */
+
                 // обратно
-                arr = Serializer.objSer(response).getBytes(StandardCharsets.UTF_8);
+                //arr = Serializer.objSer(response).getBytes(StandardCharsets.UTF_8);
+                System.out.println(new String(arr));
                 buf = ByteBuffer.wrap(arr);
 
                 // передаём обратно на клиент
