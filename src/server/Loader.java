@@ -1,3 +1,6 @@
+/**
+ * @author Troitskaya Tamara (cgsg-tt6)
+ */
 package server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

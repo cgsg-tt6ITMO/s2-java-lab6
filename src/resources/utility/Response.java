@@ -1,5 +1,11 @@
+/**
+ * @author Troitskaya Tamara (cgsg-tt6)
+ */
 package resources.utility;
 
+/**
+ * Class of Responses -- objects of server's answer.
+ */
 public class Response {
     private final String message;
 

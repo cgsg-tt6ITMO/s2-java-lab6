@@ -1,3 +1,6 @@
+/**
+ * @author Troitskaya Tamara (cgsg-tt6)
+ */
 package resources.utility;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,16 +10,24 @@ import resources.task.Route;
 
 import java.io.IOException;
 
+/**
+ * Makes strings out of objects in order to send data through Streams of bytes.
+ */
 public class Serializer {
     private static final ObjectMapper mapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
     /**
-     * Default json manager constructor.
+     * Default constructor.
      */
     public Serializer() {}
 
+    /**
+     * Returns string out of any object.
+     * @param r object to be serialized.
+     * @return string as a result of serialization.
+     */
     public static String objSer(Object r) {
         String res = "";
         try {

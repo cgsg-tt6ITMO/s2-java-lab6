@@ -1,3 +1,6 @@
+/**
+ * @author Troitskaya Tamara (cgsg-tt6)
+ */
 package resources.utility;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -5,6 +8,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import resources.task.Route;
 
+/**
+ * Returns object from json serialized lines.
+ */
 public class Deserializer {
     private static final ObjectMapper mapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
@@ -21,10 +27,10 @@ public class Deserializer {
         return res;
     }
 
-    public static Request[] readArr(String json) {
-        Request[] res = null;
+    public static Response[] responses(String json) {
+        Response[] res = null;
         try {
-            res = mapper.readValue(json, Request[].class);
+            res = mapper.readValue(json, Response[].class);
         } catch (Exception ex) {
             System.err.println("Arr input from json:" + ex.getMessage());
             ex.printStackTrace();
@@ -38,6 +44,17 @@ public class Deserializer {
             res = mapper.readValue(json, Request.class);
         } catch (Exception ex) {
             System.err.println("Req input from json:" + ex.getMessage());
+            ex.printStackTrace();
+        }
+        return res;
+    }
+
+    public static Request[] readArr(String json) {
+        Request[] res = null;
+        try {
+            res = mapper.readValue(json, Request[].class);
+        } catch (Exception ex) {
+            System.err.println("Arr input from json:" + ex.getMessage());
             ex.printStackTrace();
         }
         return res;

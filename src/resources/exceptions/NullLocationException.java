@@ -4,7 +4,8 @@
 package resources.exceptions;
 
 /**
- * Null-resourses.Location set in Route.
+ * Null-Location set in Route.
+ * Probably, it should become a Validator...
  */
 public class NullLocationException extends RuntimeException {
     /**

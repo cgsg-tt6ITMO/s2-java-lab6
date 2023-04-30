@@ -37,8 +37,8 @@ public class CommandManager {
         RemoveLowerCommand removeLower = new RemoveLowerCommand(collectionManager);
         InsertAtCommand insertAt = new InsertAtCommand(collectionManager, this);
         UpdateCommand update = new UpdateCommand(collectionManager);
-        //ExecuteScriptCommand executeScript = new ExecuteScriptCommand(collectionManager, inputManager);
 
+        commands.put("sort", sort);
         commands.put(help.getName(), help);
         commands.put(info.getName(), info);
         commands.put(show.getName(), show);
@@ -53,9 +53,6 @@ public class CommandManager {
         commands.put(removeLower.getName(), removeLower);
         commands.put(insertAt.getName(), insertAt);
         commands.put(update.getName(), update);
-        //commands.put(executeScript.getName(), executeScript);
-
-        commands.put("sort", sort);
 
     }
 
