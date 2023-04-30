@@ -1,18 +1,21 @@
+/**
+ * @author Troitskaya Tamara (cgsg-tt6)
+ */
 package client;
 
 import java.util.ArrayList;
 
 /**
- * Нужен для проверки отсутсвия зацикливания в скриптах.
+ * Needed to avoid infinite loop of scripts.
+ * Stores an array of all used scripts in this script.
  */
 public class ExecuteScriptHandler {
-
-    public ExecuteScriptHandler() {
-        System.out.println("ExecuteScriptHandler");
-    }
-
-    // for 'execute_script' -- array of all used scripts.
     private final ArrayList<String> files = new ArrayList<>();
+
+    /**
+     * Default constructor.
+     */
+    public ExecuteScriptHandler() {}
 
     /**
      * @return array of paths with scripts we met on our way.
@@ -37,6 +40,5 @@ public class ExecuteScriptHandler {
     public void fclear() {
         this.files.clear();
     }
-
 
 }

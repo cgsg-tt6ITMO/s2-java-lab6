@@ -1,3 +1,6 @@
+/**
+ * @author Troitskaya Tamara (cgsg-tt6)
+ */
 package client;
 
 import client.input_manager.Input;
@@ -11,11 +14,8 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
- * Я создала для этого отдельный класс, потому что он просто вызывает другие функции, то есть
- * request-ы будут посылаться только функциями, которые в нём написаны, а не им самим
- * иначе было бы: execute_script посылает request, а ему что в ответ?
- *
- * Кстати, возможно можно создать коллекцию команд, которые возвращает execute_script
+ * This command needs its own class because it just calls other commands.
+ * It does not send its own requests, only commands written inside do.
  */
 public class ExecuteScript {
     private static Input inputManager;
@@ -30,14 +30,8 @@ public class ExecuteScript {
      * а не ArrayList<Request>
      */
     public String makeReq() {
-        //ArrayList<String> reqs = new ArrayList<>();
         int numOfCommands = 100;
         Request[] reqs = new Request[numOfCommands];
-        /* надо сделать так, чтобы Client.run() возвращал Request
-         * либо придётся копировать кусок кода сюда
-         */
-
-        // для того, чтобы избежать зацикливания скриптов, в клиенте надо создать массив использованных скритов
 
         boolean loop = true, wasErr = false;
         do {
@@ -47,7 +41,7 @@ public class ExecuteScript {
                 }
                 String path = inputManager.inpString("script file name");
 
-                // проверка отсутствия зацикливания в скриптах
+                // check infinite loop
                 if (handler.getFiles().isEmpty()) {
                     handler.fadd(path);
                 } else {
@@ -63,8 +57,8 @@ public class ExecuteScript {
                 Scanner fileScanner = new Scanner(file);
                 for (int i = 0; i < numOfCommands; i++) {
                     if (fileScanner.hasNext()) {
-                        Request st = Deserializer.readReq(new String(new client.CommandHandler().run(fileScanner)));
-                        System.out.println(st);
+                        Request st = Deserializer.readReq(new String(
+                                new client.CommandHandler().run(fileScanner)));
                         reqs[i] = st;
                     }
                 }
@@ -82,5 +76,4 @@ public class ExecuteScript {
 
         return Serializer.objSer(reqs);
     }
-
 }

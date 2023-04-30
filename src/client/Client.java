@@ -21,6 +21,11 @@ public class Client {
     private static int len;
     private static final Scanner sc = new Scanner(System.in);
 
+    /**
+     * Sends requests and gets responses from the server.
+     * Displays server Responses.
+     * @param args cmd arguments.
+     */
     public static void main(String[] args) {
         InetAddress host;
         int port = 6000;
@@ -34,19 +39,26 @@ public class Client {
             sock.connect(addr);
             while (sc.hasNext()) {
                 arr = commandHandler.run(sc);
-                System.out.println(new String(arr));
                 len = arr.length;
-                // несколько раз посылаем
+                // send data
                 buf = ByteBuffer.wrap(arr);
                 sock.write(buf);
-                // получаем данные
+                // get data
                 buf.clear();
                 arr = new byte[8192];
                 buf = ByteBuffer.allocate(8192);
                 sock.read(buf);
-
-                // выводим данные response
-                Response response = Deserializer.readResp(new String(buf.array()).trim());
+                // display response data
+                String answ = new String(buf.array()).trim();
+                if (answ.charAt(0) == '[') {
+                    for (var i : Deserializer.responses(answ)) {
+                        System.out.println(i.getMessage());
+                    }
+                }
+                else {
+                    Response response = Deserializer.readResp(answ);
+                    System.out.println(response.getMessage());
+                }
                 buf.clear();
             }
         } catch (UnknownHostException e) {
@@ -55,8 +67,9 @@ public class Client {
             System.err.println(e.getMessage());
         } catch (NoSuchCommandException e) {
             System.err.println(e.getMessage() + " (re-input команды пока что не поддерживается)");
-        }
-        catch (IOException e) {
+        } catch (SocketException e) {
+            System.out.println("The program was aborted.");
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
