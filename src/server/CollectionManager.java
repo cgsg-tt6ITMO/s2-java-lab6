@@ -15,24 +15,6 @@ public class CollectionManager {
     private static Stack<Route> stack = new Stack<>();
     private final String type;
     private final ZonedDateTime creationDate;
-    private static Long lastId = 0L;
-
-    // for 'add'
-
-    /**
-     * @return id of last element in collection (so that the new id should be lastId + 1).
-     */
-    public static Long getLastId() {
-        return lastId;
-    }
-
-    /**
-     * Changes the id of last element.
-     * @param Id id of new last element.
-     */
-    public static void setLastId(Long Id) {
-        lastId = Id;
-    }
 
     // for 'info'
 

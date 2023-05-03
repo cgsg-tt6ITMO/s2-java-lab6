@@ -6,6 +6,7 @@ package server.commands;
 import resources.utility.Response;
 import server.CollectionManager;
 import server.CommandManager;
+import server.IdHandler;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -47,8 +48,8 @@ public class InsertAtCommand extends AbstractCommand implements Command {
         boolean loop = true;
         do {
             try {
-                if (id > CollectionManager.getLastId()) {
-                    CollectionManager.setLastId(id - 1);
+                if (id > IdHandler.getLastId()) {
+                    IdHandler.setLastId(id - 1);
                     cm.getCommands().get("add").execute(json.toString());
                 }
                 else if (id < 1) {

@@ -21,6 +21,7 @@ public class CommandManager {
         Loader loader = new Loader(System.getenv().get(envVar));
         CollectionManager collectionManager = new CollectionManager(loader);
         Saver saver = new Saver(collectionManager.stack(), System.getenv().get(envVar));
+
         SortingCommand sort = new SortingCommand(collectionManager);
 
         HelpCommand help = new HelpCommand(this);
@@ -53,7 +54,6 @@ public class CommandManager {
         commands.put(removeLower.getName(), removeLower);
         commands.put(insertAt.getName(), insertAt);
         commands.put(update.getName(), update);
-
     }
 
     /**

@@ -7,6 +7,7 @@ import client.validators.DistanceValidator;
 import resources.exceptions.NullLocationException;
 import client.input_manager.AskInputManager;
 import server.CollectionManager;
+import server.IdHandler;
 
 import java.time.ZonedDateTime;
 import java.util.InputMismatchException;
@@ -98,8 +99,8 @@ public class Route implements Comparable<Route>{
      * Automatically generated unique id.
      */
     public void setId() {
-        CollectionManager.setLastId(CollectionManager.getLastId() + 1);;
-        this.id = CollectionManager.getLastId();
+        IdHandler.setLastId(IdHandler.getLastId() + 1);;
+        this.id = IdHandler.getLastId();
     }
 
     /**

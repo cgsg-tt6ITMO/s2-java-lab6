@@ -7,6 +7,8 @@ import resources.utility.Response;
 import server.CollectionManager;
 import resources.task.Route;
 
+import java.util.Comparator;
+
 /**
  * Sorts the collection.
  * (Is needed only after 'insert_at', so it doesn't have description and name)
@@ -18,7 +20,7 @@ public class SortingCommand implements Command {
      * @param collectionManager storage of the collection.
      */
     public SortingCommand(CollectionManager collectionManager) {
-        this.storage = collectionManager;
+        storage = collectionManager;
     }
 
     /**
@@ -37,13 +39,8 @@ public class SortingCommand implements Command {
      */
     @Override
     public Response execute(String args) {
-        for (int j = 0; j < storage.stack().size() - 1; j++) {
-            for (int i = j + 1; i < storage.stack().size(); i++) {
-                if (storage.stack().get(i).getId() < storage.stack().get(i - 1).getId()) {
-                    swap(i, j);
-                }
-            }
-        }
+        Comparator<Route> routeComparator = Comparator.comparing(Route::getId);
+        storage.stack().sort(routeComparator);
         return new Response();
     }
 }

@@ -72,7 +72,6 @@ public class Server {
                         }
                     }
                     arr = Serializer.objSer(response).getBytes(StandardCharsets.UTF_8);
-                    System.out.println(new String(arr));
                 } else {
                     Request r = Deserializer.readReq(new String(arr));
                     Response response = commandManager.getCommands().get(r.name()).execute(r.args());
