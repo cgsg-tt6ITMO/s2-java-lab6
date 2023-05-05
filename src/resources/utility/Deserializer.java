@@ -3,6 +3,7 @@
  */
 package resources.utility;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -42,9 +43,8 @@ public class Deserializer {
         Request res = null;
         try {
             res = mapper.readValue(json, Request.class);
-        } catch (Exception ex) {
-            System.err.println("Req input from json:" + ex.getMessage());
-            ex.printStackTrace();
+        } catch (JsonProcessingException e) {
+            return new Request("exit", "error");
         }
         return res;
     }

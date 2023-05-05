@@ -9,14 +9,12 @@ import resources.utility.Response;
 import resources.utility.Serializer;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
+import java.rmi.ConnectIOException;
 import java.util.ArrayList;
 
 /**
@@ -24,8 +22,7 @@ import java.util.ArrayList;
  */
 public class Server {
     private static byte[] arr = new byte[8192];
-    private static final int len = arr.length;
-    private static final int maxCom = 100;
+    private static final int MAX_NUM_COMMANDS = 100;
 
     /**
      * Default constructor.
@@ -38,7 +35,7 @@ public class Server {
      * @param args cmd arguments.
      */
     public static void main(String[] args) {
-        int q = maxCom;
+        int q = MAX_NUM_COMMANDS;
         InetAddress host;
         int port = 6000;
         SocketAddress addr;
@@ -47,49 +44,57 @@ public class Server {
         ByteBuffer buf;
         CommandManager commandManager = new CommandManager();
 
-        try {
-            host = InetAddress.getLocalHost();
-            addr = new InetSocketAddress(host, port);
+        boolean loop = true;
+        do {
+            try {
+                host = InetAddress.getLocalHost();
+                addr = new InetSocketAddress(host, port);
+                serv = ServerSocketChannel.open();
+                serv.bind(addr);
+                sock = serv.accept();
 
-            serv = ServerSocketChannel.open();
-            serv.bind(addr);
-            sock = serv.accept();
-
-            while (q > 0) {
-                buf = ByteBuffer.wrap(arr);
-                sock.read(buf);
-
-                // data deserialization & command execution
-
-                if (arr[0] == '[') {
-                    System.out.println("array form execute_script");
-                    Request[] reqs = Deserializer.readArr(new String(arr));
-                    ArrayList<Response> response = new ArrayList<>();
-                    for (Request r : reqs) {
-                        if (r != null) {
-                            Response res = commandManager.getCommands().get(r.name()).execute(r.args());
-                            response.add(res);
+                while (q > 0) {
+                    // get data from client
+                    buf = ByteBuffer.wrap(arr);
+                    sock.read(buf);
+                    // data deserialization & command execution
+                    if (arr[0] == '[') {
+                        System.out.println("array form execute_script");
+                        Request[] reqs = Deserializer.readArr(new String(arr));
+                        ArrayList<Response> response = new ArrayList<>();
+                        for (Request r : reqs) {
+                            if (r != null) {
+                                Response res = commandManager.runCommand(r);
+                                response.add(res);
+                            }
                         }
+                        arr = Serializer.objSer(response).getBytes(StandardCharsets.UTF_8);
+                    } else {
+                        Request r = Deserializer.readReq(new String(arr));
+                        Response response = commandManager.runCommand(r.name(), r.args());
+                        arr = Serializer.objSer(response).getBytes(StandardCharsets.UTF_8);
                     }
-                    arr = Serializer.objSer(response).getBytes(StandardCharsets.UTF_8);
-                } else {
-                    Request r = Deserializer.readReq(new String(arr));
-                    Response response = commandManager.getCommands().get(r.name()).execute(r.args());
-                    arr = Serializer.objSer(response).getBytes(StandardCharsets.UTF_8);
+                    // send response to the client
+                    buf = ByteBuffer.wrap(arr);
+                    sock.write(buf);
+                    arr = new byte[8192];
+                    q--;
                 }
-
-                // send response to the client
-                buf = ByteBuffer.wrap(arr);
-                //buf.flip();
-                sock.write(buf);
-                arr = new byte[8192];
-                q--;
+                sock.close();
+            } catch (UnknownHostException e) {
+                System.err.println(e.getMessage());
+            } catch (ConnectIOException e) {
+                System.err.println("ConnectIOException");
+            } catch (BindException e) {
+                port += 1;
+            } catch (IOException e) {
+                System.out.println("Probably, one client was disconnected...");
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                System.err.println("ERROR...");
+                e.printStackTrace();
             }
-            sock.close();
-        } catch (UnknownHostException e) {
-            System.err.println(e.getMessage());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        } while (loop);
     }
 }
