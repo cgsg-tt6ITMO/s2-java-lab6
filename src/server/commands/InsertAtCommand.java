@@ -50,7 +50,7 @@ public class InsertAtCommand extends AbstractCommand implements Command {
             try {
                 if (id > IdHandler.getLastId()) {
                     IdHandler.setLastId(id - 1);
-                    cm.getCommands().get("add").execute(json.toString());
+                    cm.runCommand("add", json.toString());
                 }
                 else if (id < 1) {
                     System.err.println("insert_at: TODO надо кинуть Response ошибка Incorrect id: less than 1\n");
@@ -66,7 +66,7 @@ public class InsertAtCommand extends AbstractCommand implements Command {
                             el.setId(el.getId() + 1);
                         }
                     }
-                    cm.getCommands().get("add").execute(json.toString());
+                    cm.runCommand("add", json.toString());
                     storage.stack().peek().setId(id);
                 }
                 loop = false;
@@ -76,10 +76,10 @@ public class InsertAtCommand extends AbstractCommand implements Command {
         } while (loop);
 
         if (storage.stack().size() > n) {
-            cm.getCommands().get("sort").execute("");
+            cm.runCommand("sort", "");
             return new Response("INSERT AT:\nInserted successfully.\n");
         }
-        cm.getCommands().get("sort").execute("");
+        cm.runCommand("sort", "");
         return new Response("INSERT AT:\n");
     }
 }

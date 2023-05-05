@@ -24,17 +24,6 @@ public class SortingCommand implements Command {
     }
 
     /**
-     * Swaps two elements while sorting.
-     * @param a index of the first element to be swapped with the second;
-     * @param b index of the second element.
-     */
-    private void swap(int a, int b) {
-        Route tmp = storage.stack().get(a);
-        storage.stack().set(a, storage.stack().get(b));
-        storage.stack().set(b, tmp);
-    }
-
-    /**
      * Sorts the Stack by id.
      */
     @Override

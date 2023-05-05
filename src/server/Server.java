@@ -59,7 +59,6 @@ public class Server {
                     sock.read(buf);
                     // data deserialization & command execution
                     if (arr[0] == '[') {
-                        System.out.println("array form execute_script");
                         Request[] reqs = Deserializer.readArr(new String(arr));
                         ArrayList<Response> response = new ArrayList<>();
                         for (Request r : reqs) {

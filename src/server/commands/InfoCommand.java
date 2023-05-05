@@ -29,6 +29,7 @@ public class InfoCommand extends AbstractCommand implements Command{
         var date = collectionManager.getCreationDate();
         return new Response(("COLLECTION INFO:\n"
                 + "creation time: " + date.getHour() + ":" + (date.getMinute() > 9 ? date.getMinute() : "0" + date.getMinute())
-                + "\ntype of storage: " + collectionManager.getType() + "\nnumber of elements: " + collectionManager.stack().size() + "\n\n"));
+                + "\ntype of storage: " + collectionManager.getCollectionType()
+                + "\nnumber of elements: " + collectionManager.stack().size() + "\n\n"));
     }
 }

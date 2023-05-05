@@ -8,6 +8,4 @@ package resources.utility;
  * @param name - name of command.
  * @param args - arguments for the command.
  */
-public record Request(String name, String args) {
-
-}
+public record Request(String name, String args) {}

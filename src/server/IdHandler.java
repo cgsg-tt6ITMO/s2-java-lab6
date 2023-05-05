@@ -1,3 +1,6 @@
+/**
+ * @author Troitskaya Tamara (cgsg-tt6)
+ */
 package server;
 
 /**
@@ -5,7 +8,6 @@ package server;
  */
 public class IdHandler {
     private static Long lastId = 0L;
-
 
     /**
      * @return id of last element in collection (so that the new id should be lastId + 1).

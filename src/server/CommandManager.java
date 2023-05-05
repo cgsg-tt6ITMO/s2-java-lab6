@@ -3,6 +3,8 @@
  */
 package server;
 
+import resources.utility.Request;
+import resources.utility.Response;
 import server.commands.*;
 
 import java.util.HashMap;
@@ -21,8 +23,9 @@ public class CommandManager {
         Loader loader = new Loader(System.getenv().get(envVar));
         CollectionManager collectionManager = new CollectionManager(loader);
         Saver saver = new Saver(collectionManager.stack(), System.getenv().get(envVar));
-
-        SortingCommand sort = new SortingCommand(collectionManager);
+        if (collectionManager.stack().size() > 0) {
+            IdHandler.setLastId(collectionManager.stack().peek().getId());
+        }
 
         HelpCommand help = new HelpCommand(this);
         InfoCommand info = new InfoCommand(collectionManager);
@@ -39,7 +42,7 @@ public class CommandManager {
         InsertAtCommand insertAt = new InsertAtCommand(collectionManager, this);
         UpdateCommand update = new UpdateCommand(collectionManager);
 
-        commands.put("sort", sort);
+        commands.put("sort", new SortingCommand(collectionManager));
         commands.put(help.getName(), help);
         commands.put(info.getName(), info);
         commands.put(show.getName(), show);
@@ -57,10 +60,22 @@ public class CommandManager {
     }
 
     /**
-     * @return ArrayList of all server.commands.
+     * @return ArrayList of all commands (for 'help').
      */
     public HashMap<String, Command> getCommands() {
         return commands;
+    }
+
+    public Response runCommand(String name, String args) {
+        return runCommand(new Request(name, args));
+    }
+
+    public Response runCommand(Request r) {
+        if (commands.containsKey(r.name())) {
+            return commands.get(r.name()).execute(r.args());
+        } else {
+            return new Response("ERROR: " + r.name() + " command doesn't exist");
+        }
     }
 
 }

@@ -13,28 +13,14 @@ import java.util.*;
  */
 public class CollectionManager {
     private static Stack<Route> stack = new Stack<>();
-    private final String type;
+    private final String collectionType;
     private final ZonedDateTime creationDate;
-
-    // for 'info'
-
-    /**
-     * @return creationTime of the collection.
-     */
     public ZonedDateTime getCreationDate() {
         return creationDate;
     }
-
-    /**
-     * @return type of the collection for 'info' (Stack);
-     */
-    public String getType() {
-        return type;
+    public String getCollectionType() {
+        return collectionType;
     }
-
-    /**
-     * @return instance of Stack with all elements.
-     */
     public Stack<Route> stack() {
         return stack;
     }
@@ -43,7 +29,7 @@ public class CollectionManager {
      * Collection initialization.
      */
     public CollectionManager(Loader loader) {
-        type = "Stack";
+        collectionType = "Stack";
         creationDate = ZonedDateTime.now();
         stack = loader.load();
     }

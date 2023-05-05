@@ -4,7 +4,6 @@
 package server.commands;
 
 import resources.utility.Response;
-import server.CommandManager;
 import server.Saver;
 
 import static java.lang.System.exit;
@@ -29,7 +28,6 @@ public class ExitCommand extends AbstractCommand implements Command {
     @Override
     public Response execute(String args) {
         saver.save();
-        exit(0);
         return new Response("EXIT...\n");
     }
 }

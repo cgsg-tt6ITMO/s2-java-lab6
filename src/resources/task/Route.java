@@ -6,7 +6,6 @@ package resources.task;
 import client.validators.DistanceValidator;
 import resources.exceptions.NullLocationException;
 import client.input_manager.AskInputManager;
-import server.CollectionManager;
 import server.IdHandler;
 
 import java.time.ZonedDateTime;
@@ -17,7 +16,7 @@ import static java.lang.Math.sqrt;
 /**
  * Elements of the collection.
  */
-public class Route implements Comparable<Route>{
+public class Route implements Comparable<Route> {
     private Long id; // Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
@@ -89,7 +88,7 @@ public class Route implements Comparable<Route>{
     }
 
     /**
-     * Needed for 'insert_at'
+     * Needed for 'insert_at'.
      */
     public void setId(Long id) {
         this.id = id;
@@ -173,14 +172,14 @@ public class Route implements Comparable<Route>{
             this.to = to;
         }
         else {
-            System.err.println("Class Route: resourses.Location 'to' is null");;
-            Location t = aim.inpLocation("Input correct data:\nresourses.Location(Float, Float, Long, String name)");
+            System.err.println("Class Route: Location 'to' is null");;
+            Location t = aim.inpLocation("Input correct data:\nLocation(Float, Float, Long, String name)");
             setTo(t);
         }
     }
 
     /**
-     * @return resourses.Location To of the Route.
+     * @return Location To of the Route.
      */
     public Location getTo() {
         return to;
@@ -188,7 +187,7 @@ public class Route implements Comparable<Route>{
 
     /**
      * Sets where do we come from.
-     * @param from != null, resourses.Location - the beginning of our route.
+     * @param from != null, Location - the beginning of our route.
      */
     public void setFrom(Location from) {
         boolean loop = true, wasErr = false;
@@ -201,8 +200,8 @@ public class Route implements Comparable<Route>{
                     throw new NullLocationException("setFrom");
                 }
                 if (wasErr) {
-                    System.err.println("Class Route: resourses.Location 'from' is null");
-                    Location f = aim.inpLocation("Input correct data:\nresourses.Location(Float, Float, Long, String name)");
+                    System.err.println("Class Route: Location 'from' is null");
+                    Location f = aim.inpLocation("Input correct data:\nLocation(Float, Float, Long, String name)");
                     setFrom(f);
                 }
                 loop = false;
