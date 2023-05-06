@@ -4,7 +4,7 @@
 package server.commands;
 
 import resources.utility.Response;
-import server.CollectionManager;
+import server.managers.CollectionManager;
 import resources.utility.Deserializer;
 
 import java.util.Objects;

@@ -7,6 +7,7 @@ import resources.utility.Deserializer;
 import resources.utility.Request;
 import resources.utility.Response;
 import resources.utility.Serializer;
+import server.managers.CommandManager;
 
 import java.io.IOException;
 import java.net.*;
@@ -58,6 +59,8 @@ public class Server {
                     buf = ByteBuffer.wrap(arr);
                     sock.read(buf);
                     // data deserialization & command execution
+
+                    // TODO: сделать так, чтоб без start не начинали
                     if (arr[0] == '[') {
                         Request[] reqs = Deserializer.readArr(new String(arr));
                         ArrayList<Response> response = new ArrayList<>();
@@ -73,6 +76,7 @@ public class Server {
                         Response response = commandManager.runCommand(r.name(), r.args());
                         arr = Serializer.objSer(response).getBytes(StandardCharsets.UTF_8);
                     }
+
                     // send response to the client
                     buf = ByteBuffer.wrap(arr);
                     sock.write(buf);

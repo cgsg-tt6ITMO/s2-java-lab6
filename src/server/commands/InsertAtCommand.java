@@ -4,9 +4,9 @@
 package server.commands;
 
 import resources.utility.Response;
-import server.CollectionManager;
-import server.CommandManager;
-import server.IdHandler;
+import server.managers.CollectionManager;
+import server.managers.CommandManager;
+import resources.utility.IdHandler;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -33,6 +33,9 @@ public class InsertAtCommand extends AbstractCommand implements Command {
      */
     @Override
     public Response execute(String args) {
+        int size = storage.stack().size();
+        IdHandler idHandler = new IdHandler((long) size);
+
         Scanner scanner = new Scanner(args);
         String idStr = scanner.nextLine();
         scanner.close();
@@ -48,8 +51,8 @@ public class InsertAtCommand extends AbstractCommand implements Command {
         boolean loop = true;
         do {
             try {
-                if (id > IdHandler.getLastId()) {
-                    IdHandler.setLastId(id - 1);
+                if (id > idHandler.getLastId()) {
+                    idHandler.setLastId(id - 1);
                     cm.runCommand("add", json.toString());
                 }
                 else if (id < 1) {

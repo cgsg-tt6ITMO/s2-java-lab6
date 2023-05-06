@@ -6,7 +6,7 @@ package resources.task;
 import client.validators.DistanceValidator;
 import resources.exceptions.NullLocationException;
 import client.input_manager.AskInputManager;
-import server.IdHandler;
+import resources.utility.IdHandler;
 
 import java.time.ZonedDateTime;
 import java.util.InputMismatchException;
@@ -25,7 +25,7 @@ public class Route implements Comparable<Route> {
     private Location to; //Поле может быть null
     private Double distance; //Значение поля должно быть больше 1
 
-    private final AskInputManager aim = new AskInputManager(new Scanner(System.in));
+    //private final AskInputManager aim = new AskInputManager(new Scanner(System.in));
 
     @Override
     public String toString() {
@@ -53,7 +53,7 @@ public class Route implements Comparable<Route> {
      * Default constructor for debugging.
      */
     public Route() {
-        setId();
+        setId(1L);
         setCreationTime(ZonedDateTime.now());
         setName("route#" + id);
         setCoordinates(new Coordinates(5.17, 3.41f));
@@ -68,8 +68,22 @@ public class Route implements Comparable<Route> {
     /**
      * The most frequently used constructor.
      */
+    /*
     public Route(String Name, Coordinates coords, Location f, Location t) {
         this();
+        setName(Name);
+        setCoordinates(coords);
+        setFrom(f);
+        setTo(t);
+        Double dist = sqrt((f.getX()-t.getX()) * (f.getX()-t.getX()) + (f.getY()-t.getY()) * (f.getY()-t.getY())
+                + (f.getZ()-t.getZ()) * (f.getZ()-t.getZ()));
+        setDistance(dist);
+    }
+
+     */
+
+    public Route(Long id, String Name, Coordinates coords, Location f, Location t) {
+        setId(id);
         setName(Name);
         setCoordinates(coords);
         setFrom(f);
@@ -82,10 +96,13 @@ public class Route implements Comparable<Route> {
     /**
      * In case we need to set distance not automatically.
      */
+    /*
     public Route(String Name, Coordinates coords, Location f, Location t, Double distance) {
         this(Name, coords, f, t);
         setDistance(distance);
     }
+
+     */
 
     /**
      * Needed for 'insert_at'.
@@ -97,10 +114,13 @@ public class Route implements Comparable<Route> {
     /**
      * Automatically generated unique id.
      */
+    /*
     public void setId() {
-        IdHandler.setLastId(IdHandler.getLastId() + 1);;
+        IdHandler.setLastId(IdHandler.getLastId() + 1);
         this.id = IdHandler.getLastId();
     }
+
+     */
 
     /**
      * @return id of the Route.
@@ -133,13 +153,16 @@ public class Route implements Comparable<Route> {
      * @param coordinates set coordinates for route.
      */
     public void setCoordinates(Coordinates coordinates) {
-        if (coordinates != null) {
+        //if (coordinates != null) {
             this.coordinates = coordinates;
+            /*
         } else {
             System.err.println("Class Route: Field coordinates is null");
             Coordinates coords = aim.inpCoordinates("Input correct data:\nCoordinates(Double, Float)");
             setCoordinates(coords);
         }
+
+             */
     }
 
     /**
@@ -168,14 +191,17 @@ public class Route implements Comparable<Route> {
      * @param to != null, resourses.Location - point of destination.
      */
     public void setTo(Location to) {
-        if (to != null) {
+        //if (to != null) {
             this.to = to;
+            /*
         }
         else {
             System.err.println("Class Route: Location 'to' is null");;
             Location t = aim.inpLocation("Input correct data:\nLocation(Float, Float, Long, String name)");
             setTo(t);
         }
+
+             */
     }
 
     /**
@@ -190,6 +216,9 @@ public class Route implements Comparable<Route> {
      * @param from != null, Location - the beginning of our route.
      */
     public void setFrom(Location from) {
+        this.from = from;
+
+        /*
         boolean loop = true, wasErr = false;
         do {
             try {
@@ -210,6 +239,8 @@ public class Route implements Comparable<Route> {
                 loop = true;
             }
         } while (loop);
+
+         */
     }
 
     public Location getFrom() {
@@ -221,6 +252,8 @@ public class Route implements Comparable<Route> {
      * @param distance - the length (long)
      */
     public void setDistance(Double distance) {
+        this.distance = distance;
+
         if (new DistanceValidator().validate(distance)) {
             this.distance = distance;
         } else {

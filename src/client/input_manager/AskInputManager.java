@@ -6,6 +6,7 @@ package client.input_manager;
 import resources.task.Coordinates;
 import resources.task.Location;
 import resources.task.Route;
+import resources.utility.IdHandler;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -16,13 +17,15 @@ import java.util.Scanner;
  */
 public class AskInputManager implements Input {
     private Scanner sc;
+    private final IdHandler idHandler;
 
     /**
      * Input manager initialization.
      * @param scanner - scanner from which to input (console, file, etc).
      */
-    public AskInputManager(Scanner scanner) {
+    public AskInputManager(Scanner scanner, IdHandler idHandler) {
         setScanner(scanner);
+        this.idHandler = idHandler;
     }
 
     /**
@@ -39,7 +42,9 @@ public class AskInputManager implements Input {
      */
     public Route inpRoute() {
         System.out.println("Input route data");
-        return new Route(inpString("Name"),
+        idHandler.setLastId(idHandler.getLastId() + 1);
+        return new Route(idHandler.getLastId(),
+                inpString("Name"),
                 inpCoordinates("Coordinates (Double X, Float Y)"),
                 inpLocation("Location from (Float X, Float Y, Long Z, String name)"),
                 inpLocation("Location to (Float X, Float Y, Long Z, String name)"));

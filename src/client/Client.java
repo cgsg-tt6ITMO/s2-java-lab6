@@ -4,11 +4,17 @@
 package client;
 
 import resources.exceptions.NoSuchCommandException;
+import resources.utility.Deserializer;
+import resources.utility.Request;
+import resources.utility.Response;
+import resources.utility.Serializer;
 
 import java.io.IOException;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
 import java.util.Scanner;
 
 /**
@@ -25,24 +31,48 @@ public class Client {
     public static void main(String[] args) {
         InetAddress host;
         // need to change the number after client disconnection
-        int port = 6000;
+        int port = 6009;
         SocketAddress addr;
         byte[] arr;
         ByteBuffer buf;
-        CommandHandler commandHandler = new CommandHandler();
+        CommandHandler commandHandler = new CommandHandler(sc, 0);
 
         try (SocketChannel sock = SocketChannel.open()) {
             host = InetAddress.getLocalHost();
             addr = new InetSocketAddress(host, port);
             sock.connect(addr);
+            System.out.println("Type 'start' to begin...");
+
+            if (sc.nextLine().equals("start")) {
+                Request r = new Request("start", "");
+                arr = Serializer.objSer(r).getBytes(StandardCharsets.UTF_8);
+                buf = ByteBuffer.wrap(arr);
+                sock.write(buf);
+
+                buf.clear();
+                buf = ByteBuffer.allocate(8192);
+                sock.read(buf);
+
+                Response resp = Deserializer.readResp(new String(buf.array()));
+                try {
+                    commandHandler = new CommandHandler(sc, Integer.parseInt(resp.getMessage()));
+                    System.out.println("Start successful");
+                } catch (NumberFormatException numberFormatException) {
+                    //System.err.println("Collection default size is wrong...");
+                }
+                buf.clear();
+            }
+
             while (sc.hasNext()) {
                 try {
-                    arr = commandHandler.run(sc);
+                    arr = commandHandler.run();
                     buf = ByteBuffer.wrap(arr);
                     sock.write(buf);
+
                     buf.clear();
                     buf = ByteBuffer.allocate(8192);
                     sock.read(buf);
+
                     DisplayResponse.display(buf.array());
                     buf.clear();
                 } catch (UnknownHostException e) {
@@ -55,6 +85,7 @@ public class Client {
                 } catch (SocketException e) {
                     e.printStackTrace();
                 }
+
             }
         } catch (UnknownHostException | ConnectException e) {
             System.err.println(e.getMessage());

@@ -1,7 +1,7 @@
 /**
  * @author Troitskaya Tamara (cgsg-tt6)
  */
-package server;
+package server.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

@@ -4,7 +4,7 @@
 package server.commands;
 
 import resources.utility.Response;
-import server.CommandManager;
+import server.managers.CommandManager;
 
 /**
  * Handle 'help' method.

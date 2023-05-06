@@ -59,13 +59,15 @@ public class Location {
      * Safe setting Y.
      */
     public void setY(Float y) {
-        if (y != null) {
+        //if (y != null) {
             this.y = y;
+            /*
         } else {
             System.err.println("Class task\\Location: Y is null");
             AskInputManager aim = new AskInputManager(new Scanner(System.in));
             setY(aim.inpFloat("Input correct data:\nsetY (Float)"));
         }
+             */
     }
 
     public Float getY() {

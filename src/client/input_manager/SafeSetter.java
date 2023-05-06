@@ -11,7 +11,7 @@ public class SafeSetter<T> {
     AskInputManager inputManager;
 
     public SafeSetter() {
-        inputManager = new AskInputManager(new Scanner(System.in));
+        //inputManager = new AskInputManager(new Scanner(System.in));
     }
 /*
     public SafeSetter(Input inputManager) {

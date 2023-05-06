@@ -6,6 +6,7 @@ package client;
 import client.input_manager.AskInputManager;
 import client.input_manager.Input;
 import resources.exceptions.NoSuchCommandException;
+import resources.utility.IdHandler;
 import resources.utility.Request;
 import resources.utility.Serializer;
 
@@ -16,23 +17,32 @@ import java.util.Scanner;
  * Class that inputs commands with their arguments and generates requests.
  */
 public class CommandHandler {
+    private final Input im;
+    private final Scanner sc;
+    private final IdHandler idHandler;
 
     /**
      * Default constructor.
      */
-    public CommandHandler() {}
+    public CommandHandler(Scanner sc, int size) {
+        this.idHandler = new IdHandler((long) size);
+        this.im = new AskInputManager(sc, idHandler);
+        this.sc = sc;
+    }
 
     /**
      * Method that handles input logic.
      * It handles the number of arguments command needs.
      */
-    public byte[] run(Scanner sc) {
-        Input im = new AskInputManager(sc);
+    public byte[] run() {
         Request r = null;
         byte[] arr;
-
         String command = sc.nextLine();
         switch (command) {
+            // но не должно быть так, что посреди команды мы ввели start...
+            case "start"  -> {
+                r = new Request("start", "");
+            }
             case "group_counting_by_from",
                     "help", "info", "show",
                     "print_field_descending_distance",
@@ -48,7 +58,7 @@ public class CommandHandler {
                     r = new Request(command, Serializer.doubleSer(im.inpDouble("distance")));
             case "execute_script" -> {
                 ExecuteScript executeScript = new ExecuteScript(im);
-                String requests = executeScript.makeReq();
+                String requests = executeScript.makeReq(Math.toIntExact(idHandler.getLastId()));
                 return requests.getBytes();
             }
             default -> throw new NoSuchCommandException(command + " doesn't exist.");

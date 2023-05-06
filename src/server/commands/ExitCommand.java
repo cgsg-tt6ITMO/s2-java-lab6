@@ -4,9 +4,7 @@
 package server.commands;
 
 import resources.utility.Response;
-import server.Saver;
-
-import static java.lang.System.exit;
+import server.handlers.Saver;
 
 /**
  * Handle 'exit' command.

@@ -1,18 +1,26 @@
 /**
  * @author Troitskaya Tamara (cgsg-tt6)
  */
-package server;
+package resources.utility;
 
 /**
  * Generates correct id.
  */
 public class IdHandler {
-    private static Long lastId = 0L;
+    private static Long lastId;
+
+    public IdHandler() {
+        lastId = 0L;
+    }
+
+    public IdHandler(Long id) {
+        lastId = id;
+    }
 
     /**
      * @return id of last element in collection (so that the new id should be lastId + 1).
      */
-    public static Long getLastId() {
+    public Long getLastId() {
         return lastId;
     }
 
@@ -20,7 +28,7 @@ public class IdHandler {
      * Changes the id of last element.
      * @param Id id of new last element.
      */
-    public static void setLastId(Long Id) {
+    public void setLastId(Long Id) {
         lastId = Id;
     }
 }

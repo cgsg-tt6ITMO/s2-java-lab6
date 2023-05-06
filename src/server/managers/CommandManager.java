@@ -1,11 +1,15 @@
 /**
  * @author Troitskaya Tamara (cgsg-tt6)
  */
-package server;
+package server.managers;
 
 import resources.utility.Request;
 import resources.utility.Response;
 import server.commands.*;
+import server.handlers.GetDefaultCollectionSize;
+import resources.utility.IdHandler;
+import server.handlers.Loader;
+import server.handlers.Saver;
 
 import java.util.HashMap;
 
@@ -23,10 +27,9 @@ public class CommandManager {
         Loader loader = new Loader(System.getenv().get(envVar));
         CollectionManager collectionManager = new CollectionManager(loader);
         Saver saver = new Saver(collectionManager.stack(), System.getenv().get(envVar));
-        if (collectionManager.stack().size() > 0) {
-            IdHandler.setLastId(collectionManager.stack().peek().getId());
-        }
+        IdHandler idHandler = new IdHandler(collectionManager.stack().peek().getId());
 
+        GetDefaultCollectionSize defaultSize = new GetDefaultCollectionSize(collectionManager.stack());
         HelpCommand help = new HelpCommand(this);
         InfoCommand info = new InfoCommand(collectionManager);
         ShowCommand show = new ShowCommand(collectionManager);
@@ -42,6 +45,7 @@ public class CommandManager {
         InsertAtCommand insertAt = new InsertAtCommand(collectionManager, this);
         UpdateCommand update = new UpdateCommand(collectionManager);
 
+        commands.put("start", defaultSize);
         commands.put("sort", new SortingCommand(collectionManager));
         commands.put(help.getName(), help);
         commands.put(info.getName(), info);

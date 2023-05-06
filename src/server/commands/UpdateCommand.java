@@ -5,7 +5,7 @@ package server.commands;
 
 import resources.task.Route;
 import resources.utility.Response;
-import server.CollectionManager;
+import server.managers.CollectionManager;
 import resources.task.Coordinates;
 import resources.task.Location;
 import resources.utility.Deserializer;

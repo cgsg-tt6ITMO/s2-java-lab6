@@ -29,7 +29,7 @@ public class ExecuteScript {
      * Может, оно будет возвращать массив уже сериализованных строк?
      * а не ArrayList<Request>
      */
-    public String makeReq() {
+    public String makeReq(int stackSize) {
         int numOfCommands = 100;
         Request[] reqs = new Request[numOfCommands];
 
@@ -37,7 +37,7 @@ public class ExecuteScript {
         do {
             try {
                 if (wasErr) {
-                    System.err.println("execute script: client.input filename again:");
+                    System.err.println("execute script: input filename again:");
                 }
                 String path = inputManager.inpString("script file name");
 
@@ -58,7 +58,8 @@ public class ExecuteScript {
                 for (int i = 0; i < numOfCommands; i++) {
                     if (fileScanner.hasNext()) {
                         Request st = Deserializer.readReq(new String(
-                                new client.CommandHandler().run(fileScanner)));
+                                new client.CommandHandler(fileScanner, stackSize).run()));
+                        stackSize += 1;
                         reqs[i] = st;
                     }
                 }
