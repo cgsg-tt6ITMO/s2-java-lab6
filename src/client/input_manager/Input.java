@@ -3,6 +3,7 @@
  */
 package client.input_manager;
 
+import client.validators.Validator;
 import resources.task.Coordinates;
 import resources.task.Location;
 import resources.task.Route;
@@ -28,9 +29,9 @@ public interface Input {
     Coordinates inpCoordinates(String name);
     Location inpLocation(String name);
 
-    Double inpDouble(String name);
-    Float inpFloat(String name);
-    Long inpLong(String name);
-    String inpString(String name);
+    Double inpDouble(String name, Validator<Double> validator);
+    Float inpFloat(String name, Validator<Float> validator);
+    Long inpLong(String name, Validator<Long> validator);
+    String inpString(String name, Validator<String> validator);
 
 }

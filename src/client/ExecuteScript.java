@@ -4,6 +4,8 @@
 package client;
 
 import client.input_manager.Input;
+import client.validators.PathValidator;
+import client.validators.ValidateException;
 import resources.exceptions.InfiniteLoopException;
 import resources.utility.Deserializer;
 import resources.utility.Request;
@@ -39,7 +41,7 @@ public class ExecuteScript {
                 if (wasErr) {
                     System.err.println("execute script: input filename again:");
                 }
-                String path = inputManager.inpString("script file name");
+                String path = inputManager.inpString("script file name", new PathValidator());
 
                 // check infinite loop
                 if (handler.getFiles().isEmpty()) {
@@ -57,15 +59,15 @@ public class ExecuteScript {
                 Scanner fileScanner = new Scanner(file);
                 for (int i = 0; i < numOfCommands; i++) {
                     if (fileScanner.hasNext()) {
+                        stackSize += 1;
                         Request st = Deserializer.readReq(new String(
                                 new client.CommandHandler(fileScanner, stackSize).run()));
-                        stackSize += 1;
                         reqs[i] = st;
                     }
                 }
 
                 loop = false;
-            } catch (FileNotFoundException e) {
+            } catch (ValidateException | FileNotFoundException e) {
                 loop = true;
                 wasErr = true;
             }

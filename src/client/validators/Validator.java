@@ -3,6 +3,8 @@
  */
 package client.validators;
 
+import java.io.FileNotFoundException;
+
 /**
  * Checks if values are correct.
  * @param <T> type of value.
@@ -14,5 +16,5 @@ public interface Validator<T> {
      * @param value value to be checked.
      * @return true if the value is suitable.
      */
-    boolean validate(T value);
+    T validate(T value);
 }

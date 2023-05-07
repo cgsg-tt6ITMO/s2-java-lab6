@@ -3,18 +3,18 @@
  */
 package resources.task;
 
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import client.validators.NotNullValidator;
+import client.validators.ValidateException;
 
 /**
- * Coordinates class due to the resourses.task.
+ * Coordinates class due to the task.
  */
 public class Coordinates {
-    private Double x; //Поле не может быть null
+    private Double x; // not null
     private float y;
 
     /**
-     * Default constructor for resourses.jackson.
+     * Default constructor for jackson.
      */
     public Coordinates() {}
 
@@ -23,38 +23,25 @@ public class Coordinates {
      * @param X abscissa (!= null);
      * @param Y ordinate.
      */
-    public Coordinates(Double X, float Y) {
+    public Coordinates(Double X, float Y) throws ValidateException {
         setX(X);
         y = Y;
     }
 
     /**
-     * Sets X, without any exceptions written by me.
+     * Sets X.
      */
-    public void setX(Double x) {
-        if (x != null) {
-            this.x = x;
-        }
-        else {
-            boolean loop = true;
-            do {
-                try {
-                    System.err.println("Coordinate: You are trying to make X equal null");
-                    System.out.println("Input X again:");
-                    setX(new Scanner(System.in).nextDouble());
-                    loop = false;
-                } catch (NumberFormatException | InputMismatchException e) {
-                    loop = true;
-                }
-            } while (loop);
-        }
+    public Coordinates setX(Double x) throws ValidateException {
+        this.x = new NotNullValidator<Double>().validate(x);
+        return this;
     }
 
     /**
      * @param y - ordinate to set.
      */
-    public void setY(float y) {
+    public Coordinates setY(float y) {
         this.y = y;
+        return this;
     }
 
     /**
@@ -65,7 +52,7 @@ public class Coordinates {
     }
 
     /**
-     * Needed for resourses.jackson.
+     * Needed for jackson.
      * @return ordinate of the point.
      */
     public float getY() {

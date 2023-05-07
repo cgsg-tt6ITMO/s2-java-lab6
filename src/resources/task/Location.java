@@ -4,6 +4,9 @@
 package resources.task;
 
 import client.input_manager.AskInputManager;
+import client.validators.NotNullValidator;
+import client.validators.StringValidator;
+import client.validators.ValidateException;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -13,9 +16,9 @@ import java.util.Scanner;
  */
 public class Location {
     private float x;
-    private Float y; //Поле не может быть null
+    private Float y; // not null
     private long z;
-    private String name; //Строка не может быть пустой, Поле может быть null
+    private String name; // not null, not empty
 
     /**
      * For 'group_counting_by_from' method.
@@ -29,26 +32,27 @@ public class Location {
      * Default Location constructor.
      */
     public Location() {
-        this(0, (float)0.010, 0, null);
+        this(0, (float)0.010, 0, "default location");
     }
 
     /**
      * Location constructor of 4 arguments.
      * First three arguments are coordinates.
      * @param X - abscissa;
-     * @param Y - ordinate;
+     * @param Y - ordinate; (not null)
      * @param Z - applicate;
-     * @param nm - name of the location.
+     * @param nm - name of the location. (not null)
      */
-    public Location(float X, Float Y, long Z, String nm) {
+    public Location(float X, Float Y, long Z, String nm) throws ValidateException {
         setX(X);
         setY(Y);
         setZ(Z);
         setName(nm);
     }
 
-    public void setX(float x) {
+    public Location setX(float x) {
         this.x = x;
+        return this;
     }
 
     public float getX() {
@@ -58,24 +62,18 @@ public class Location {
     /**
      * Safe setting Y.
      */
-    public void setY(Float y) {
-        //if (y != null) {
-            this.y = y;
-            /*
-        } else {
-            System.err.println("Class task\\Location: Y is null");
-            AskInputManager aim = new AskInputManager(new Scanner(System.in));
-            setY(aim.inpFloat("Input correct data:\nsetY (Float)"));
-        }
-             */
+    public Location setY(Float y) throws ValidateException {
+        this.y = new NotNullValidator<Float>().validate(y);
+        return this;
     }
 
     public Float getY() {
         return y;
     }
 
-    public void setZ(long z) {
+    public Location setZ(long z) {
         this.z = z;
+        return this;
     }
 
     public long getZ() {
@@ -83,16 +81,11 @@ public class Location {
     }
 
     /**
-     * In case of incorrect client.input offers you to re-client.input.
+     * In case of incorrect input offers you to re-client.input.
      */
-    public void setName(String name) {
-        if (!Objects.equals(name, "")) {
-            this.name = name;
-        } else {
-            System.err.println("Class task\\Location: name is ''");
-            System.out.println("Input correct data:\nsetName (String)");
-            setName(new Scanner(System.in).nextLine());
-        }
+    public Location setName(String name) throws ValidateException {
+        this.name = new StringValidator().validate(name);
+        return this;
     }
 
     public String getName() {

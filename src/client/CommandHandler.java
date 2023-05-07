@@ -5,6 +5,8 @@ package client;
 
 import client.input_manager.AskInputManager;
 import client.input_manager.Input;
+import client.validators.DistanceValidator;
+import client.validators.IdValidator;
 import resources.exceptions.NoSuchCommandException;
 import resources.utility.IdHandler;
 import resources.utility.Request;
@@ -51,11 +53,11 @@ public class CommandHandler {
             }
             case "add", "remove_lower", "add_if_max" ->
                     r = new Request(command, Serializer.objSer(im.inpRoute()));
-            case "remove_by_id" -> r = new Request(command, Serializer.longSer(im.inpLong("id")));
+            case "remove_by_id" -> r = new Request(command, Serializer.longSer(im.inpLong("id", new IdValidator())));
             case "update", "insert_at" ->
-                    r = new Request(command, Serializer.longRouteSer(im.inpLong("id"), im.inpRoute()));
+                    r = new Request(command, Serializer.longRouteSer(im.inpLong("id", new IdValidator()), im.inpRoute()));
             case "filter_greater_than_distance" ->
-                    r = new Request(command, Serializer.doubleSer(im.inpDouble("distance")));
+                    r = new Request(command, Serializer.doubleSer(im.inpDouble("distance", new DistanceValidator())));
             case "execute_script" -> {
                 ExecuteScript executeScript = new ExecuteScript(im);
                 String requests = executeScript.makeReq(Math.toIntExact(idHandler.getLastId()));

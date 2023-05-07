@@ -3,6 +3,7 @@
  */
 package client.input_manager;
 
+import client.validators.*;
 import resources.task.Coordinates;
 import resources.task.Location;
 import resources.task.Route;
@@ -32,6 +33,7 @@ public class AskInputManager implements Input {
      * Changes the scanner from which we input.
      * @param scanner - new scanner.
      */
+    @Override
     public void setScanner(Scanner scanner) {
         this.sc = scanner;
     }
@@ -40,122 +42,115 @@ public class AskInputManager implements Input {
      * Inputs Route.
      * @return the Route inputted.
      */
+    @Override
     public Route inpRoute() {
         System.out.println("Input route data");
         idHandler.setLastId(idHandler.getLastId() + 1);
-        return new Route(idHandler.getLastId(),
-                inpString("Name"),
-                inpCoordinates("Coordinates (Double X, Float Y)"),
-                inpLocation("Location from (Float X, Float Y, Long Z, String name)"),
-                inpLocation("Location to (Float X, Float Y, Long Z, String name)"));
+        try {
+            return new Route()
+                    .setId(idHandler.getLastId())
+                    .setName(inpString("Name", new StringValidator()))
+                    .setCoordinates(inpCoordinates("Coordinates (Double X, Float Y)"))
+                    .setFrom(inpLocation("Location from (Float X, Float Y, Long Z, String name)"))
+                    .setTo(inpLocation("Location to (Float X, Float Y, Long Z, String name)"));
+        } catch (ValidateException validateException) {
+            return inpRoute();
+        }
     }
 
     /**
-     * @param name name of variable.
+     * @param variableName name of variable.
      * @return inputted Coordinates.
      */
-    public Coordinates inpCoordinates(String name) {
-        System.out.println(name);
-        return new Coordinates(inpDouble("X"), inpFloat("Y"));
+    @Override
+    public Coordinates inpCoordinates(String variableName) {
+        System.out.println(variableName);
+        try {
+            // через билдер быстрее ошибку найдём
+            return new Coordinates()
+                    .setX(inpDouble("X", new NotNullValidator<Double>()))
+                    .setY(inpFloat("Y", new NoValidator<Float>()));
+        } catch (ValidateException validateException) {
+            return inpCoordinates("input again " + variableName);
+        }
     }
 
     /**
-     * @param name name of variable.
+     * @param variableName name of variable.
      * @return inputted Location.
      */
-    public Location inpLocation(String name) {
-        System.out.println(name);
-        return new Location(inpFloat("X"), inpFloat("Y"), inpLong("Z"), inpString("name"));
+    @Override
+    public Location inpLocation(String variableName) {
+        System.out.println(variableName);
+        try {
+            return new Location()
+                    .setX(inpFloat("X", new NoValidator<>()))
+                    .setY(inpFloat("Y", new NotNullValidator<Float>()))
+                    .setZ(inpLong("Z", new NoValidator<Long>()))
+                    .setName(inpString("name", new StringValidator()));
+        } // придётся заново все вводить
+        catch (ValidateException | NumberFormatException | InputMismatchException e) {
+            return inpLocation("input again " + variableName);
+        }
     }
 
     /**
      * Safely inputs a variable of Double type.
-     * @param name - name of the variable.
+     * @param variableName - name of the variable.
      * @return result (Double).
      */
-    public Double inpDouble(String name) {
-        Double res = null;
-
-        boolean loop = true;
-        boolean wasErr = false;
-        do {
-            try {
-                if (wasErr) {
-                    System.err.println("Incorrect data, client.input again:");
-                }
-                System.out.println(name + " (Double)");
-                res = Double.parseDouble(sc.nextLine());
-                loop = false;
-            } catch (NumberFormatException | InputMismatchException exception) {
-                wasErr = true;
-                loop = true;
-            }
-        } while (loop);
-
-        return res;
+    @Override
+    public Double inpDouble(String variableName, Validator<Double> validator) {
+        System.out.println(variableName + " (Float)");
+        try {
+            return validator.validate(Double.parseDouble(sc.nextLine()));
+        } catch (ValidateException | NumberFormatException | InputMismatchException e) {
+            return inpDouble("input again " + variableName, validator);
+        }
     }
 
     /**
      * Safely inputs a variable of Float type.
-     * @param name - name of the variable.
+     * @param variableName - name of the variable.
      * @return result (Float).
      */
-    public Float inpFloat(String name) {
-        Float res = null;
-
-        boolean loop = true;
-        boolean wasErr = false;
-        do {
-            try {
-                if (wasErr) {
-                    System.err.println("Incorrect data, client.input again:");
-                }
-                System.out.println(name + " (Float)");
-                res = Float.parseFloat(sc.nextLine());
-                loop = false;
-            } catch (NumberFormatException | InputMismatchException exception) {
-                wasErr = true;
-                loop = true;
-            }
-        } while (loop);
-
-        return res;
+    @Override
+    public Float inpFloat(String variableName, Validator<Float> validator) {
+        System.out.println(variableName + " (Float)");
+        try {
+            return validator.validate(Float.parseFloat(sc.nextLine()));
+        } catch (ValidateException | NumberFormatException | InputMismatchException e) {
+            return inpFloat("input again" + variableName, validator);
+        }
     }
 
     /**
      * Safely inputs a variable of Long type.
-     * @param name - name of the variable.
+     * @param variableName - name of the variable.
      * @return result (Long).
      */
-    public Long inpLong(String name) {
-        Long res = null;
-
-        boolean loop = true;
-        boolean wasErr = false;
-        do {
-            try {
-                if (wasErr) {
-                    System.err.println("Incorrect data, client.input again:");
-                }
-                System.out.println(name + " (Long)");
-                res = Long.parseLong(sc.nextLine());
-                loop = false;
-            } catch (NumberFormatException | InputMismatchException exception) {
-                wasErr = true;
-                loop = true;
-            }
-        } while (loop);
-
-        return res;
+    @Override
+    public Long inpLong(String variableName, Validator<Long> validator) {
+        System.out.println(variableName + " (Long)");
+        try {
+            return validator.validate(Long.parseLong(sc.nextLine()));
+        } catch (ValidateException | NumberFormatException | InputMismatchException e) {
+            return inpLong("input again" + variableName, validator);
+        }
     }
 
     /**
-     * @param name name of the variable we input.
+     * @param variableName name of the variable we input.
      * @return inputted String
      */
-    public String inpString(String name) {
-        System.out.println(name + " (String)");
-        return sc.nextLine();
+    @Override
+    public String inpString(String variableName, Validator<String> validator) {
+        System.out.println(variableName + " (String)");
+        try {
+            return validator.validate(sc.nextLine());
+        } catch (ValidateException validateException) {
+            return inpString("input again" + variableName, new StringValidator());
+        }
     }
 
     /**
@@ -165,5 +160,4 @@ public class AskInputManager implements Input {
     public String toString() {
         return "Input manager which prints tips for inputting data";
     }
-
 }

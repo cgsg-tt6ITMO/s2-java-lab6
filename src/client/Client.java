@@ -14,7 +14,6 @@ import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
 import java.util.Scanner;
 
 /**
@@ -31,7 +30,7 @@ public class Client {
     public static void main(String[] args) {
         InetAddress host;
         // need to change the number after client disconnection
-        int port = 6009;
+        int port = 6000;
         SocketAddress addr;
         byte[] arr;
         ByteBuffer buf;
@@ -58,21 +57,17 @@ public class Client {
                     commandHandler = new CommandHandler(sc, Integer.parseInt(resp.getMessage()));
                     System.out.println("Start successful");
                 } catch (NumberFormatException numberFormatException) {
-                    //System.err.println("Collection default size is wrong...");
                 }
                 buf.clear();
             }
-
             while (sc.hasNext()) {
                 try {
                     arr = commandHandler.run();
                     buf = ByteBuffer.wrap(arr);
                     sock.write(buf);
-
                     buf.clear();
                     buf = ByteBuffer.allocate(8192);
                     sock.read(buf);
-
                     DisplayResponse.display(buf.array());
                     buf.clear();
                 } catch (UnknownHostException e) {
@@ -85,7 +80,6 @@ public class Client {
                 } catch (SocketException e) {
                     e.printStackTrace();
                 }
-
             }
         } catch (UnknownHostException | ConnectException e) {
             System.err.println(e.getMessage());

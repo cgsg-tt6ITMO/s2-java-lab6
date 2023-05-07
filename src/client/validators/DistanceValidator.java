@@ -8,7 +8,10 @@ package client.validators;
  */
 public class DistanceValidator implements Validator<Double> {
     @Override
-    public boolean validate(Double value) {
-        return value > 1;
+    public Double validate(Double value) throws  ValidateException {
+        if (value > 1) {
+            return value;
+        }
+        throw new ValidateException("Route: Incorrect distance.");
     }
 }
