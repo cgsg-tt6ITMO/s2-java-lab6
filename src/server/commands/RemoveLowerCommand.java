@@ -4,23 +4,24 @@
 package server.commands;
 
 import resources.utility.Response;
-import server.managers.CollectionManager;
 import resources.task.Route;
 import resources.utility.Deserializer;
+
+import java.util.Stack;
 
 /**
  * Handle 'remove_lower' method.
  */
 public class RemoveLowerCommand extends AbstractCommand implements Command {
-    private final CollectionManager cm;
+    private final Stack<Route> stack;
 
     /**
      * Set name and description for 'remove_lower' command.
-     * @param collectionManager storage of the collection.
+     * @param stack storage of the collection.
      */
-    public RemoveLowerCommand(CollectionManager collectionManager) {
+    public RemoveLowerCommand(Stack<Route> stack) {
         super("remove_lower", "removes all elements lower than inputted;");
-        this.cm = collectionManager;
+        this.stack = stack;
     }
 
     /**
@@ -29,15 +30,15 @@ public class RemoveLowerCommand extends AbstractCommand implements Command {
     @Override
     public Response execute(String args) {
         Route route = Deserializer.readRoute(args);
-        int n = cm.stack().size();
+        int n = stack.size();
         StringBuilder sb = new StringBuilder("REMOVE LOWER:\n");
-        for (var el : cm.stack()) {
+        for (var el : stack) {
             if (route.compareTo(el) > 0) {
-                cm.stack().remove(el);
+                stack.remove(el);
             }
         }
         // analyse results
-        if (n > cm.stack().size()) {
+        if (n > stack.size()) {
             sb.append("SUCCESSFUL REMOVE\n\n");
         } else {
             sb.append("No elements were less than inputted.\n\n");

@@ -33,7 +33,7 @@ public class HelpCommand extends AbstractCommand implements Command {
                 sb.append(commandManager.getCommands().get(key)).append("\n");
             }
         }
-        sb.append('\n');
+        sb.append("execute_script - runs input data from a script file.\n\n");
         return new Response(new String(sb));
     }
 }

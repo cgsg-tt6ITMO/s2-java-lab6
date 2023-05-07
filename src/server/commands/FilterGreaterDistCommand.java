@@ -3,23 +3,25 @@
  */
 package server.commands;
 
+import resources.task.Route;
 import resources.utility.Response;
-import server.managers.CollectionManager;
 import resources.utility.Deserializer;
+
+import java.util.Stack;
 
 /**
  * Handle 'filter_greater_than_distance' method.
  */
 public class FilterGreaterDistCommand extends AbstractCommand implements Command {
-    private final CollectionManager collectionManager;
+    private final Stack<Route> stack;
 
     /**
      * Set name and description for 'filter_greater_than_distance' command.
-     * @param collectionManager storage of the collection.
+     * @param stack storage of the collection.
      */
-    public FilterGreaterDistCommand(CollectionManager collectionManager) {
+    public FilterGreaterDistCommand(Stack<Route> stack) {
         super("filter_greater_than_distance", "prints elements with distance greater than the inputted one;");
-        this.collectionManager = collectionManager;
+        this.stack = stack;
     }
 
     /**
@@ -29,9 +31,10 @@ public class FilterGreaterDistCommand extends AbstractCommand implements Command
     public Response execute(String args) {
         StringBuilder sb = new StringBuilder("ROUTES WITH DIST GREATER THAN INPUTTED:\n");
         Double distance = Deserializer.readDouble(args);
-        for (var el : collectionManager.stack()) {
+        for (var el : stack) {
             if (el.getDistance() > distance) {
-                sb.append("ID: \t\t").append(el.getId()).append("\nName: \t\t").append(el.getName()).append("\nDistance: \t").append(el.getDistance()).append("\n\n");
+                sb.append("ID: \t\t").append(el.getId()).append("\nName: \t\t").append(el.getName())
+                        .append("\nDistance: \t").append(el.getDistance()).append("\n\n");
             }
         }
         sb.append('\n');

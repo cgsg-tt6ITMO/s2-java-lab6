@@ -3,25 +3,26 @@
  */
 package server.commands;
 
+import resources.task.Route;
 import resources.utility.Response;
-import server.managers.CollectionManager;
 import resources.utility.Deserializer;
 
 import java.util.Objects;
+import java.util.Stack;
 
 /**
  * Handle 'remove_by_id' method.
  */
 public class RemoveByIdCommand extends AbstractCommand implements Command {
-    private final CollectionManager collectionManager;
+    private final Stack<Route> stack;
 
     /**
      * Set name and description for 'remove_by_id' command.
-     * @param collectionManager storage of the collection.
+     * @param stack storage of the collection.
      */
-    public RemoveByIdCommand(CollectionManager collectionManager) {
+    public RemoveByIdCommand(Stack<Route> stack) {
         super("remove_by_id", "deletes the element with inputted id;");
-        this.collectionManager = collectionManager;
+        this.stack = stack;
     }
 
     /**
@@ -31,10 +32,10 @@ public class RemoveByIdCommand extends AbstractCommand implements Command {
     public Response execute(String args) {
         StringBuilder sb = new StringBuilder("REMOVE BY ID:\n");
         Long id = Deserializer.readLong(args);
-        int begin = collectionManager.stack().size();
+        int begin = stack.size();
         if (begin != 0) {
-            collectionManager.stack().removeIf(el -> Objects.equals(el.getId(), id));
-            if (Objects.equals(collectionManager.stack().size(), begin)) {
+            stack.removeIf(el -> Objects.equals(el.getId(), id));
+            if (Objects.equals(stack.size(), begin)) {
                 System.err.println("remove_by_id: there is no element with this id: " + id + ".\n");
                 sb.append("If you wish to try again, type 'remove_by_id' one more time.\n\n");
             } else {

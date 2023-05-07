@@ -3,22 +3,24 @@
  */
 package server.commands;
 
+import resources.task.Route;
 import resources.utility.Response;
-import server.managers.CollectionManager;
+
+import java.util.Stack;
 
 /**
  * Handle 'show' method.
  */
 public class ShowCommand extends AbstractCommand implements Command{
-    private final CollectionManager collectionManager;
+    private final Stack<Route> stack;
 
     /**
      * Set name and description for 'show' command.
-     * @param storage storage of the collection.
+     * @param stack storage of the collection.
      */
-    public ShowCommand(CollectionManager storage) {
+    public ShowCommand(Stack<Route> stack) {
         super("show", "prints the collection to screen;");
-        this.collectionManager = storage;
+        this.stack = stack;
     }
 
     /**
@@ -27,12 +29,13 @@ public class ShowCommand extends AbstractCommand implements Command{
     @Override
     public Response execute(String args) {
         StringBuilder sb = new StringBuilder("SHOW COLLECTION:\n");
-        if (collectionManager.stack().size() == 0) {
+        if (stack.size() == 0) {
             sb.append("The collection is empty.");
             return new Response(new String(sb));
         }
-        for (var el : collectionManager.stack()) {
-            sb.append("ID: \t\t").append(el.getId()).append("\nName: \t\t").append(el.getName()).append("\nDistance: \t").append(el.getDistance()).append("\n\n");
+        for (var el : stack) {
+            sb.append("ID: \t\t").append(el.getId()).append("\nName: \t\t").append(el.getName())
+                    .append("\nDistance: \t").append(el.getDistance()).append("\n\n");
         }
         return new Response(new String(sb));
     }

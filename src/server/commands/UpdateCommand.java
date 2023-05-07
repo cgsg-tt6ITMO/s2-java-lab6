@@ -5,12 +5,12 @@ package server.commands;
 
 import resources.task.Route;
 import resources.utility.Response;
-import server.managers.CollectionManager;
 import resources.task.Coordinates;
 import resources.task.Location;
 import resources.utility.Deserializer;
 
 import java.util.Scanner;
+import java.util.Stack;
 
 import static java.lang.Math.sqrt;
 
@@ -18,15 +18,15 @@ import static java.lang.Math.sqrt;
  * Handle 'update' method.
  */
 public class UpdateCommand extends AbstractCommand implements Command {
-    private final CollectionManager storage;
+    private final Stack<Route> stack;
 
     /**
      * Set name and description for 'update' command.
-     * @param collectionManager storage of the collection.
+     * @param stack storage of the collection.
      */
-    public UpdateCommand(CollectionManager collectionManager) {
+    public UpdateCommand(Stack<Route> stack) {
         super("update", "updates element with id inputted;");
-        this.storage = collectionManager;
+        this.stack = stack;
     }
 
     /**
@@ -34,9 +34,16 @@ public class UpdateCommand extends AbstractCommand implements Command {
      */
     private StringBuilder show_by_id(Long id) {
         StringBuilder s = new StringBuilder();
-        for (var r : storage.stack()) {
+        for (var r : stack) {
             if (r.getId().equals(id)) {
-                s.append("Route Id:      ").append(r.getId()).append("\nName:          ").append(r.getName()).append("\nCreation date: ").append(r.getCreationTime()).append("\nCoordinates:   ").append(r.getCoordinates().getX()).append(" ").append(r.getCoordinates().getY()).append("\nLocation From: ").append(r.getFrom().getName()).append(" ").append(r.getFrom().getX()).append(" ").append(r.getFrom().getY()).append(" ").append(r.getFrom().getZ()).append("\nLocation To:   ").append(r.getTo().getName()).append(" ").append(r.getTo().getX()).append(" ").append(r.getTo().getY()).append(" ").append(r.getTo().getZ()).append("\nDistance:      ").append(r.getDistance()).append("\n\n");
+                s.append("Route Id:      ").append(r.getId()).append("\nName:          ").append(r.getName())
+                        .append("\nCreation date: ").append(r.getCreationTime())
+                        .append("\nCoordinates:   ").append(r.getCoordinates().getX()).append(" ").append(r.getCoordinates().getY())
+                        .append("\nLocation From: ").append(r.getFrom().getName()).append(" ").append(r.getFrom().getX())
+                        .append(" ").append(r.getFrom().getY()).append(" ").append(r.getFrom().getZ())
+                        .append("\nLocation To:   ").append(r.getTo().getName()).append(" ").append(r.getTo().getX())
+                        .append(" ").append(r.getTo().getY()).append(" ").append(r.getTo().getZ())
+                        .append("\nDistance:      ").append(r.getDistance()).append("\n\n");
             }
         }
         return s;
@@ -59,7 +66,7 @@ public class UpdateCommand extends AbstractCommand implements Command {
 
         boolean exist = false;
 
-        for (var el : storage.stack()) {
+        for (var el : stack) {
             if (el.getId().equals(id)) {
                 exist = true;
                 break;
@@ -77,7 +84,7 @@ public class UpdateCommand extends AbstractCommand implements Command {
         Coordinates coords = route.getCoordinates();
         Location f = route.getFrom();
         Location t = route.getTo();
-        for (var r : storage.stack()) {
+        for (var r : stack) {
             if (r.getId().equals(id)) {
                 r.setName(Name);
                 r.setCoordinates(coords);

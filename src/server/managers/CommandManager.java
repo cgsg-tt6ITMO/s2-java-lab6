@@ -3,6 +3,7 @@
  */
 package server.managers;
 
+import resources.task.Route;
 import resources.utility.Request;
 import resources.utility.Response;
 import server.commands.*;
@@ -12,6 +13,7 @@ import server.handlers.Loader;
 import server.handlers.Saver;
 
 import java.util.HashMap;
+import java.util.Stack;
 
 /**
  * Storage for all commands.
@@ -26,24 +28,24 @@ public class CommandManager {
         String envVar = "JAVA_LABA_6";
         Loader loader = new Loader(System.getenv().get(envVar));
         CollectionManager collectionManager = new CollectionManager(loader);
-        Saver saver = new Saver(collectionManager.stack(), System.getenv().get(envVar));
-        IdHandler idHandler = new IdHandler(collectionManager.stack().peek().getId());
+        Stack<Route> stack = collectionManager.stack();
+        Saver saver = new Saver(stack, System.getenv().get(envVar));
 
-        GetDefaultCollectionSize defaultSize = new GetDefaultCollectionSize(collectionManager.stack());
+        GetDefaultCollectionSize defaultSize = new GetDefaultCollectionSize(stack);
         HelpCommand help = new HelpCommand(this);
         InfoCommand info = new InfoCommand(collectionManager);
-        ShowCommand show = new ShowCommand(collectionManager);
-        ClearCommand clear = new ClearCommand(collectionManager);
-        AddCommand add = new AddCommand(collectionManager);
+        ShowCommand show = new ShowCommand(stack);
+        ClearCommand clear = new ClearCommand(stack);
+        AddCommand add = new AddCommand(stack);
         ExitCommand exit = new ExitCommand(saver);
-        PrintDescDistCommand descDist = new PrintDescDistCommand(collectionManager);
-        FilterGreaterDistCommand filterGreaterDist = new FilterGreaterDistCommand(collectionManager);
-        AddIfMaxCommand addIfMax = new AddIfMaxCommand(collectionManager);
-        GroupByFromCommand groupByFrom = new GroupByFromCommand(collectionManager);
-        RemoveByIdCommand deleteById = new RemoveByIdCommand(collectionManager);
-        RemoveLowerCommand removeLower = new RemoveLowerCommand(collectionManager);
-        InsertAtCommand insertAt = new InsertAtCommand(collectionManager, this);
-        UpdateCommand update = new UpdateCommand(collectionManager);
+        PrintDescDistCommand descDist = new PrintDescDistCommand(stack);
+        FilterGreaterDistCommand filterGreaterDist = new FilterGreaterDistCommand(stack);
+        AddIfMaxCommand addIfMax = new AddIfMaxCommand(stack);
+        GroupByFromCommand groupByFrom = new GroupByFromCommand(stack);
+        RemoveByIdCommand deleteById = new RemoveByIdCommand(stack);
+        RemoveLowerCommand removeLower = new RemoveLowerCommand(stack);
+        InsertAtCommand insertAt = new InsertAtCommand(stack, this);
+        UpdateCommand update = new UpdateCommand(stack);
 
         commands.put("start", defaultSize);
         commands.put("sort", new SortingCommand(collectionManager));

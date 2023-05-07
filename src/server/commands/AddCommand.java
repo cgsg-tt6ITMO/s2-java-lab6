@@ -5,22 +5,23 @@ package server.commands;
 
 import resources.task.Route;
 import resources.utility.Response;
-import server.managers.CollectionManager;
 import resources.utility.Deserializer;
+
+import java.util.Stack;
 
 /**
  * Handle 'add' method.
  */
 public class AddCommand extends AbstractCommand implements Command {
-    private final CollectionManager collectionManager;
+    private final Stack<Route> stack;
 
     /**
      * Set name and description for 'add' command.
-     * @param collectionManager storage of the collection.
+     * @param stack storage of the collection.
      */
-    public AddCommand(CollectionManager collectionManager) {
+    public AddCommand(Stack<Route> stack) {
         super("add", "adds your element to the collection;");
-        this.collectionManager = collectionManager;
+        this.stack = stack;
     }
 
     /**
@@ -29,7 +30,7 @@ public class AddCommand extends AbstractCommand implements Command {
     @Override
     public Response execute(String args) {
         Route r = Deserializer.readRoute(args);
-        collectionManager.stack().add(r);
+        stack.add(r);
         return new Response("ADD ELEMENT:\nNEW ELEMENT ADDED SUCCESSFULLY\n");
     }
 }

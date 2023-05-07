@@ -3,22 +3,24 @@
  */
 package server.commands;
 
+import resources.task.Route;
 import resources.utility.Response;
-import server.managers.CollectionManager;
+
+import java.util.Stack;
 
 /**
  * Handle 'clear' method.
  */
 public class ClearCommand extends AbstractCommand implements Command{
-    private final CollectionManager collectionManager;
+    private final Stack<Route> stack;
 
     /**
      * Set name and description for 'clear' command.
-     * @param collectionManager storage of the collection.
+     * @param stack storage of the collection.
      */
-    public ClearCommand(CollectionManager collectionManager) {
+    public ClearCommand(Stack<Route> stack) {
         super("clear", "deletes all the elements of the collection;");
-        this.collectionManager = collectionManager;
+        this.stack = stack;
     }
 
     /**
@@ -26,7 +28,7 @@ public class ClearCommand extends AbstractCommand implements Command{
      */
     @Override
     public Response execute(String args) {
-        collectionManager.stack().clear();
+        stack.clear();
         return new Response("CLEAR:\nNow the collection is empty.\n");
     }
 }

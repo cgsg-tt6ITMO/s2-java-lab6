@@ -3,28 +3,29 @@
  */
 package server.commands;
 
+import resources.task.Route;
 import resources.utility.Response;
-import server.managers.CollectionManager;
 import server.managers.CommandManager;
 import resources.utility.IdHandler;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.Stack;
 
 /**
  * Handle 'insert_at' method.
  */
 public class InsertAtCommand extends AbstractCommand implements Command {
-    private final CollectionManager storage;
+    private final Stack<Route> stack;
     private final CommandManager cm;
 
     /**
      * Set name and description for 'insert_at' command.
-     * @param collectionManager storage of the collection.
+     * @param stack storage of the collection.
      */
-    public InsertAtCommand(CollectionManager collectionManager, CommandManager commandManager) {
+    public InsertAtCommand(Stack<Route> stack, CommandManager commandManager) {
         super("insert_at", "insert an element into place of inputted id;");
-        this.storage = collectionManager;
+        this.stack = stack;
         this.cm = commandManager;
     }
 
@@ -33,7 +34,7 @@ public class InsertAtCommand extends AbstractCommand implements Command {
      */
     @Override
     public Response execute(String args) {
-        int size = storage.stack().size();
+        int size = stack.size();
         IdHandler idHandler = new IdHandler((long) size);
 
         Scanner scanner = new Scanner(args);
@@ -46,7 +47,7 @@ public class InsertAtCommand extends AbstractCommand implements Command {
             json.append(args.charAt(i));
         }
 
-        int n = storage.stack().size();
+        int n = stack.size();
 
         boolean loop = true;
         do {
@@ -61,7 +62,7 @@ public class InsertAtCommand extends AbstractCommand implements Command {
                 } else {
                     boolean exist = false;
                     // check if this index exists
-                    for (var el : storage.stack()) {
+                    for (var el : stack) {
                         if (el.getId().equals(id)) {
                             exist = true;
                         }
@@ -70,7 +71,7 @@ public class InsertAtCommand extends AbstractCommand implements Command {
                         }
                     }
                     cm.runCommand("add", json.toString());
-                    storage.stack().peek().setId(id);
+                    stack.peek().setId(id);
                 }
                 loop = false;
             } catch (NumberFormatException | InputMismatchException exception){
@@ -78,7 +79,7 @@ public class InsertAtCommand extends AbstractCommand implements Command {
             }
         } while (loop);
 
-        if (storage.stack().size() > n) {
+        if (stack.size() > n) {
             cm.runCommand("sort", "");
             return new Response("INSERT AT:\nInserted successfully.\n");
         }
