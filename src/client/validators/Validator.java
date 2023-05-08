@@ -3,18 +3,24 @@
  */
 package client.validators;
 
-import java.io.FileNotFoundException;
+import resources.exceptions.ValidateException;
 
-/**
- * Checks if values are correct.
- * @param <T> type of value.
- */
-public interface Validator<T> {
-    /**
-     * Checks if values are correct.
-     * Example: negative age = false.
-     * @param value value to be checked.
-     * @return true if the value is suitable.
-     */
-    T validate(T value);
+import java.util.function.Predicate;
+
+public class Validator<T> {
+    private final Predicate<T> val;
+    private final String errorMessage;
+
+    public Validator(Predicate<T> valid, String errorMessage) {
+        this.val = valid;
+        this.errorMessage = errorMessage;
+    }
+    public static Predicate<Double> dist = (distance) -> (distance > 1);
+
+    public T validate(T value) {
+        if (val.test(value)) {
+            return value;
+        }
+        throw new ValidateException(errorMessage);
+    }
 }

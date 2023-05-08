@@ -1,7 +1,7 @@
 /**
  * @author Troitskaya Tamara (cgsg-tt6)
  */
-package client;
+package client.managers.execute_script;
 
 import java.util.ArrayList;
 

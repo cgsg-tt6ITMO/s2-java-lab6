@@ -6,6 +6,8 @@ package server.commands;
 import resources.utility.Response;
 import server.managers.CollectionManager;
 
+import java.util.function.Function;
+
 /**
  * Handle 'info' method.
  */

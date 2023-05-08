@@ -3,6 +3,8 @@
  */
 package client;
 
+import client.managers.CommandHandler;
+import client.managers.DisplayResponse;
 import resources.exceptions.NoSuchCommandException;
 import resources.utility.Deserializer;
 import resources.utility.Request;

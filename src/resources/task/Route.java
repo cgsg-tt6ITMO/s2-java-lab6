@@ -3,12 +3,10 @@
  */
 package resources.task;
 
-import client.validators.DistanceValidator;
-import client.validators.NotNullValidator;
-import client.validators.StringValidator;
-import client.validators.ValidateException;
+import client.validators.*;
 
 import java.time.ZonedDateTime;
+
 import static java.lang.Math.sqrt;
 
 /**
@@ -22,6 +20,7 @@ public class Route implements Comparable<Route> {
     private Location from;              // not null
     private Location to;
     private Double distance;            // > 1
+    private final ValidatorManager v = new ValidatorManager();
 
     @Override
     public String toString() {
@@ -64,8 +63,7 @@ public class Route implements Comparable<Route> {
     /**
      * Route constructor.
      */
-    public Route(Long id, String Name, Coordinates coords, Location f, Location t)
-            throws ValidateException {
+    public Route(Long id, String Name, Coordinates coords, Location f, Location t) {
         setId(id);
         setName(Name);
         setCoordinates(coords);
@@ -92,8 +90,8 @@ public class Route implements Comparable<Route> {
     /**
      * Sets name and suggests you to correct your output.
      */
-    public Route setName(String name) throws ValidateException {
-        this.name = new StringValidator().validate(name);
+    public Route setName(String name) {
+        this.name = name;
         return this;
     }
 
@@ -107,8 +105,8 @@ public class Route implements Comparable<Route> {
     /**
      * @param coordinates set coordinates for route.
      */
-    public Route setCoordinates(Coordinates coordinates) throws ValidateException {
-        this.coordinates = new NotNullValidator<Coordinates>().validate(coordinates);
+    public Route setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
         return this;
     }
 
@@ -137,8 +135,8 @@ public class Route implements Comparable<Route> {
      * Sets where do we go to.
      * @param to != null, Location - point of destination.
      */
-    public Route setTo(Location to) throws ValidateException {
-        this.to = new NotNullValidator<Location>().validate(to);
+    public Route setTo(Location to) {
+        this.to = to;
         return this;
     }
 
@@ -153,8 +151,8 @@ public class Route implements Comparable<Route> {
      * Sets where do we come from.
      * @param from != null, Location - the beginning of our route.
      */
-    public Route setFrom(Location from) throws ValidateException {
-        this.from = new NotNullValidator<Location>().validate(from);
+    public Route setFrom(Location from) {
+        this.from = from;
         return this;
     }
 
@@ -166,9 +164,16 @@ public class Route implements Comparable<Route> {
      * Sets the length of the route.
      * @param distance - the length (long)
      */
-    public Route setDistance(Double distance) throws ValidateException {
-        this.distance = new DistanceValidator().validate(distance);
+    public Route setDistance(Double distance) {
+        this.distance = distance;
         return this;
+    }
+
+    public Route setDistance() {
+        Double dist = sqrt((getFrom().getX() - getTo().getX()) * (getFrom().getX() - getTo().getX())
+                    + (getFrom().getY() - getTo().getY()) * (getFrom().getY() - getTo().getY())
+                    + (getFrom().getZ() - getTo().getZ()) * (getFrom().getZ() - getTo().getZ()));
+        return setDistance(dist);
     }
 
     public Double getDistance() {

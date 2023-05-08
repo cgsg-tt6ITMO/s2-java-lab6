@@ -1,11 +1,13 @@
 /**
  * @author Troitskaya Tamara (cgsg-tt6)
  */
-package client;
+package client.managers.execute_script;
 
-import client.input_manager.Input;
-import client.validators.PathValidator;
-import client.validators.ValidateException;
+import client.managers.AskInputManager;
+import client.managers.CommandHandler;
+import client.managers.execute_script.ExecuteScriptHandler;
+import resources.exceptions.ValidateException;
+import client.validators.ValidatorManager;
 import resources.exceptions.InfiniteLoopException;
 import resources.utility.Deserializer;
 import resources.utility.Request;
@@ -20,20 +22,17 @@ import java.util.Scanner;
  * It does not send its own requests, only commands written inside do.
  */
 public class ExecuteScript {
-    private static Input inputManager;
+    private static AskInputManager inputManager;
     private final ExecuteScriptHandler handler = new ExecuteScriptHandler();
 
-    public ExecuteScript(Input inpMan) {
+    public ExecuteScript(AskInputManager inpMan) {
         inputManager = inpMan;
     }
 
-    /**
-     * Может, оно будет возвращать массив уже сериализованных строк?
-     * а не ArrayList<Request>
-     */
     public String makeReq(int stackSize) {
         int numOfCommands = 100;
         Request[] reqs = new Request[numOfCommands];
+        ValidatorManager v = new ValidatorManager();
 
         boolean loop = true, wasErr = false;
         do {
@@ -41,8 +40,7 @@ public class ExecuteScript {
                 if (wasErr) {
                     System.err.println("execute script: input filename again:");
                 }
-                String path = inputManager.inpString("script file name", new PathValidator());
-
+                String path = inputManager.inpString("script file name", v.pathValidator());
                 // check infinite loop
                 if (handler.getFiles().isEmpty()) {
                     handler.fadd(path);
@@ -61,7 +59,7 @@ public class ExecuteScript {
                     if (fileScanner.hasNext()) {
                         stackSize += 1;
                         Request st = Deserializer.readReq(new String(
-                                new client.CommandHandler(fileScanner, stackSize).run()));
+                                new CommandHandler(fileScanner, stackSize).run()));
                         reqs[i] = st;
                     }
                 }

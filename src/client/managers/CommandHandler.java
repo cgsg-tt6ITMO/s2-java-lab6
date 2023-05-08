@@ -1,12 +1,10 @@
 /**
  * @author Troitskaya Tamara (cgsg-tt6)
  */
-package client;
+package client.managers;
 
-import client.input_manager.AskInputManager;
-import client.input_manager.Input;
-import client.validators.DistanceValidator;
-import client.validators.IdValidator;
+import client.managers.execute_script.ExecuteScript;
+import client.validators.ValidatorManager;
 import resources.exceptions.NoSuchCommandException;
 import resources.utility.IdHandler;
 import resources.utility.Request;
@@ -19,7 +17,7 @@ import java.util.Scanner;
  * Class that inputs commands with their arguments and generates requests.
  */
 public class CommandHandler {
-    private final Input im;
+    private final AskInputManager im;
     private final Scanner sc;
     private final IdHandler idHandler;
 
@@ -37,6 +35,7 @@ public class CommandHandler {
      * It handles the number of arguments command needs.
      */
     public byte[] run() {
+        ValidatorManager v = new ValidatorManager();
         Request r = null;
         byte[] arr;
         String command = sc.nextLine();
@@ -53,11 +52,11 @@ public class CommandHandler {
             }
             case "add", "remove_lower", "add_if_max" ->
                     r = new Request(command, Serializer.objSer(im.inpRoute()));
-            case "remove_by_id" -> r = new Request(command, Serializer.longSer(im.inpLong("id", new IdValidator())));
+            case "remove_by_id" -> r = new Request(command, Serializer.longSer(im.inpLong("id", v.idValidator())));
             case "update", "insert_at" ->
-                    r = new Request(command, Serializer.longRouteSer(im.inpLong("id", new IdValidator()), im.inpRoute()));
+                    r = new Request(command, Serializer.longRouteSer(im.inpLong("id", v.idValidator()), im.inpRoute()));
             case "filter_greater_than_distance" ->
-                    r = new Request(command, Serializer.doubleSer(im.inpDouble("distance", new DistanceValidator())));
+                    r = new Request(command, Serializer.doubleSer(im.inpDouble("distance", v.distanceValidator())));
             case "execute_script" -> {
                 ExecuteScript executeScript = new ExecuteScript(im);
                 String requests = executeScript.makeReq(Math.toIntExact(idHandler.getLastId()));

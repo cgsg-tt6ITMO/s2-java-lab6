@@ -32,11 +32,7 @@ public class RemoveLowerCommand extends AbstractCommand implements Command {
         Route route = Deserializer.readRoute(args);
         int n = stack.size();
         StringBuilder sb = new StringBuilder("REMOVE LOWER:\n");
-        for (var el : stack) {
-            if (route.compareTo(el) > 0) {
-                stack.remove(el);
-            }
-        }
+        stack.removeIf(el -> route.compareTo(el) > 0);
         // analyse results
         if (n > stack.size()) {
             sb.append("SUCCESSFUL REMOVE\n\n");

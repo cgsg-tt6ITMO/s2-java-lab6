@@ -1,7 +1,7 @@
 /**
  * @author Troitskaya Tamara (cgsg-tt6)
  */
-package client;
+package client.managers;
 
 import resources.utility.Deserializer;
 import resources.utility.Response;

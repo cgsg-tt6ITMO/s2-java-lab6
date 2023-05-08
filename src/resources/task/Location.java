@@ -3,13 +3,10 @@
  */
 package resources.task;
 
-import client.input_manager.AskInputManager;
-import client.validators.NotNullValidator;
-import client.validators.StringValidator;
-import client.validators.ValidateException;
+import resources.exceptions.ValidateException;
+import client.validators.Validator;
 
 import java.util.Objects;
-import java.util.Scanner;
 
 /**
  * Stores Location data.
@@ -63,7 +60,8 @@ public class Location {
      * Safe setting Y.
      */
     public Location setY(Float y) throws ValidateException {
-        this.y = new NotNullValidator<Float>().validate(y);
+        Validator<Float> notNullVal = new Validator<>(Objects::nonNull, "Location: Y is null");
+        this.y = notNullVal.validate(y);
         return this;
     }
 
@@ -84,7 +82,8 @@ public class Location {
      * In case of incorrect input offers you to re-client.input.
      */
     public Location setName(String name) throws ValidateException {
-        this.name = new StringValidator().validate(name);
+        Validator<String> strVal = new Validator<>((str) -> (str != null && !str.equals("")), "String is null or empty");
+        this.name = strVal.validate(name);
         return this;
     }
 

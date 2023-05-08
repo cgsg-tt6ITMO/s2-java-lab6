@@ -8,6 +8,7 @@ import resources.utility.Response;
 /**
  * Interface of all server.commands.
  */
+@FunctionalInterface
 public interface Command {
     /**
      * Run the command.

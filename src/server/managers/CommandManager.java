@@ -8,7 +8,6 @@ import resources.utility.Request;
 import resources.utility.Response;
 import server.commands.*;
 import server.handlers.GetDefaultCollectionSize;
-import resources.utility.IdHandler;
 import server.handlers.Loader;
 import server.handlers.Saver;
 

@@ -11,7 +11,7 @@ import java.util.Comparator;
 
 /**
  * Sorts the collection.
- * (Is needed only after 'insert_at', so it doesn't have description and name)
+ * (You cannot call it, so it doesn't have description and name)
  */
 public class SortingCommand implements Command {
     private final CollectionManager storage;
