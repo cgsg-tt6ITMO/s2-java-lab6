@@ -67,9 +67,11 @@ public class Client {
                     arr = commandHandler.run();
                     buf = ByteBuffer.wrap(arr);
                     sock.write(buf);
+
                     buf.clear();
                     buf = ByteBuffer.allocate(8192);
                     sock.read(buf);
+
                     DisplayResponse.display(buf.array());
                     buf.clear();
                 } catch (UnknownHostException e) {
@@ -79,16 +81,10 @@ public class Client {
                     throw new ConnectException("Client activity was terminated...");
                 } catch (NoSuchCommandException e) {
                     System.err.println(e.getMessage() + " (try again)");
-                } catch (SocketException e) {
-                    e.printStackTrace();
                 }
             }
-        } catch (UnknownHostException | ConnectException e) {
+        } catch (UnknownHostException | SocketException e) {
             System.err.println(e.getMessage());
-        } catch (NoSuchCommandException e) {
-            System.err.println(e.getMessage() + " (re-input)");
-        } catch (SocketException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
