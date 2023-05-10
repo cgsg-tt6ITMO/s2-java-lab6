@@ -27,10 +27,11 @@ public class ServerLogic {
     private static byte[] arr = new byte[8192];
     private static final int MAX_NUM_COMMANDS = 10;
 
+    private CommandManager commandManager = new CommandManager();
 
     public void makeResponse() {
         //System.out.println("makeResponse " + new String(arr));
-        CommandManager commandManager = new CommandManager();
+
         // data deserialization & command execution
 
         // TODO: сделать так, чтоб без start не начинали
@@ -122,17 +123,6 @@ public class ServerLogic {
                     iter.remove();
                 }
             }
-
-            /*
-            accept();
-            while (q > 0) {
-                read();
-                makeResponse();
-                write();
-                q--;
-            }
-
-             */
 
         } catch (UnknownHostException e) {
             System.err.println(e.getMessage());
