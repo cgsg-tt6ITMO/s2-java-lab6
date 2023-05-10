@@ -39,6 +39,11 @@ public class CommandHandler {
         Request r = null;
         String command = sc.nextLine();
         switch (command) {
+            /*
+            case "start" -> {
+                r = new Request("start", "");
+            }
+             */
             case "group_counting_by_from", "help", "info", "show",
                     "print_field_descending_distance", "clear", "exit" ->
                     r = new Request(command, "");

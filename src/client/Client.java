@@ -34,44 +34,51 @@ public class Client {
         // need to change the number after client disconnection
         int port = 6000;
         SocketAddress addr;
-        byte[] arr;
-        ByteBuffer buf;
-        CommandHandler commandHandler = new CommandHandler(sc, 0);
+        byte[] arr = new byte[8192];
+        ByteBuffer buf = ByteBuffer.wrap(arr);
+        CommandHandler commandHandler = new CommandHandler(sc, 1);
+        boolean start = false;
 
         try (SocketChannel sock = SocketChannel.open()) {
             host = InetAddress.getLocalHost();
             addr = new InetSocketAddress(host, port);
             sock.connect(addr);
+
             System.out.println("Type 'start' to begin...");
 
-            if (sc.nextLine().equals("start")) {
+            if (!start && sc.nextLine().equals("start")) {
+                byte[] array;
+                ByteBuffer buffer;
                 Request r = new Request("start", "");
-                arr = Serializer.objSer(r).getBytes(StandardCharsets.UTF_8);
-                buf = ByteBuffer.wrap(arr);
-                sock.write(buf);
+                array = Serializer.objSer(r).getBytes(StandardCharsets.UTF_8);
+                buffer = ByteBuffer.wrap(array);
+                sock.write(buffer);
 
-                buf.clear();
-                buf = ByteBuffer.allocate(8192);
-                sock.read(buf);
+                buffer.clear();
+                buffer = ByteBuffer.allocate(8192);
+                sock.read(buffer);
 
-                Response resp = Deserializer.readResp(new String(buf.array()));
-                try {
-                    commandHandler = new CommandHandler(sc, Integer.parseInt(resp.getMessage()));
-                    System.out.println("Start successful");
-                } catch (NumberFormatException numberFormatException) {
-                }
-                buf.clear();
+                Response resp = Deserializer.readResp(new String(buffer.array()));
+
+                commandHandler = new CommandHandler(sc, Integer.parseInt(resp.getMessage()));
+                System.out.println("Start successful");
+
+                buffer.clear();
+                start = true;
             }
+
+
+
             while (sc.hasNext()) {
                 try {
                     arr = commandHandler.run();
                     buf = ByteBuffer.wrap(arr);
+                    System.out.println("we send " + new String(arr));
                     sock.write(buf);
 
                     buf.clear();
                     buf = ByteBuffer.allocate(8192);
                     sock.read(buf);
-
                     DisplayResponse.display(buf.array());
                     buf.clear();
                 } catch (UnknownHostException e) {
