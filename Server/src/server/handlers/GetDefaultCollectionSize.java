@@ -17,6 +17,6 @@ public class GetDefaultCollectionSize implements Command {
 
     @Override
     public Response execute(String args) {
-        return new Response(String.valueOf(routeStack.size()));
+        return new Response(String.valueOf(routeStack.lastElement().getId()));
     }
 }

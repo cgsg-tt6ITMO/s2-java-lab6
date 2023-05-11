@@ -34,19 +34,22 @@ public class CommandHandler {
      * Method that handles input logic.
      * It handles the number of arguments command needs.
      */
-    public byte[] run() throws NoSuchCommandException {
+    public byte[] run() {
         ValidatorManager v = new ValidatorManager();
         Request r = null;
+        byte[] arr;
         String command = sc.nextLine();
         switch (command) {
-            /*
-            case "start" -> {
+            // но не должно быть так, что посреди команды мы ввели start...
+            case "start"  -> {
                 r = new Request("start", "");
             }
-             */
-            case "group_counting_by_from", "help", "info", "show",
-                    "print_field_descending_distance", "clear", "exit" ->
-                    r = new Request(command, "");
+            case "group_counting_by_from",
+                    "help", "info", "show",
+                    "print_field_descending_distance",
+                    "clear", "exit" -> {
+                r = new Request(command, "");
+            }
             case "add", "remove_lower", "add_if_max" ->
                     r = new Request(command, Serializer.objSer(im.inpRoute()));
             case "remove_by_id" -> r = new Request(command, Serializer.longSer(im.inpLong("id", v.idValidator())));
@@ -61,6 +64,13 @@ public class CommandHandler {
             }
             default -> throw new NoSuchCommandException(command + " doesn't exist.");
         }
-        return Serializer.objSer(r).getBytes(StandardCharsets.UTF_8);
+
+        if (r != null) {
+            arr = Serializer.objSer(r).getBytes(StandardCharsets.UTF_8);
+        } else {
+            arr = new byte[8192];
+            System.err.println("arr is null");
+        }
+        return arr;
     }
 }

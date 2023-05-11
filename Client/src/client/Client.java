@@ -34,48 +34,39 @@ public class Client {
         // need to change the number after client disconnection
         int port = 6000;
         SocketAddress addr;
-        byte[] arr = new byte[8192];
-        ByteBuffer buf = ByteBuffer.wrap(arr);
-        CommandHandler commandHandler = new CommandHandler(sc, 1);
-        boolean start = false;
+        byte[] arr;
+        ByteBuffer buf;
+        CommandHandler commandHandler = new CommandHandler(sc, 0);
 
         try (SocketChannel sock = SocketChannel.open()) {
             host = InetAddress.getLocalHost();
             addr = new InetSocketAddress(host, port);
             sock.connect(addr);
-
             System.out.println("Type 'start' to begin...");
 
-            if (!start && sc.nextLine().equals("start")) {
-                byte[] array;
-                ByteBuffer buffer;
+            if (sc.nextLine().equals("start")) {
                 Request r = new Request("start", "");
-                array = Serializer.objSer(r).getBytes(StandardCharsets.UTF_8);
-                buffer = ByteBuffer.wrap(array);
-                sock.write(buffer);
+                arr = Serializer.objSer(r).getBytes(StandardCharsets.UTF_8);
+                buf = ByteBuffer.wrap(arr);
+                sock.write(buf);
 
-                buffer.clear();
-                buffer = ByteBuffer.allocate(8192);
-                sock.read(buffer);
+                buf.clear();
+                buf = ByteBuffer.allocate(8192);
+                sock.read(buf);
 
-                Response resp = Deserializer.readResp(new String(buffer.array()));
-
-                commandHandler = new CommandHandler(sc, Integer.parseInt(resp.getMessage()));
-                System.out.println("Start successful");
-
-                buffer.clear();
-                start = true;
+                Response resp = Deserializer.readResp(new String(buf.array()));
+                try {
+                    commandHandler = new CommandHandler(sc, Integer.parseInt(resp.getMessage()));
+                    System.out.println("Start successful");
+                } catch (NumberFormatException numberFormatException) {
+                }
+                buf.clear();
             }
-
-
-
             while (sc.hasNext()) {
                 try {
                     arr = commandHandler.run();
                     buf = ByteBuffer.wrap(arr);
-                    System.out.println("we send " + new String(arr));
                     sock.write(buf);
-
                     buf.clear();
                     buf = ByteBuffer.allocate(8192);
                     sock.read(buf);
@@ -88,10 +79,16 @@ public class Client {
                     throw new ConnectException("Client activity was terminated...");
                 } catch (NoSuchCommandException e) {
                     System.err.println(e.getMessage() + " (try again)");
+                } catch (SocketException e) {
+                    e.printStackTrace();
                 }
             }
-        } catch (UnknownHostException | SocketException e) {
+        } catch (UnknownHostException | ConnectException e) {
             System.err.println(e.getMessage());
+        } catch (NoSuchCommandException e) {
+            System.err.println(e.getMessage() + " (re-input)");
+        } catch (SocketException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
