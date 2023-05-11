@@ -11,7 +11,11 @@ import server.handlers.GetDefaultCollectionSize;
 import server.handlers.Loader;
 import server.handlers.Saver;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.Scanner;
 import java.util.Stack;
 
 /**
@@ -25,7 +29,7 @@ public class CommandManager {
      */
     public CommandManager() {
         String envVar = "JAVA_LABA_6";
-        Loader loader = new Loader(System.getenv().get(envVar));
+        Loader loader = new Loader(envVar);
         CollectionManager collectionManager = new CollectionManager(loader);
         Stack<Route> stack = collectionManager.stack();
         Saver saver = new Saver(stack, System.getenv().get(envVar));
